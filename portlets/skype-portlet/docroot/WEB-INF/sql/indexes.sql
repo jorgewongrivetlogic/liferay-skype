@@ -1,0 +1,1 @@
+create index IX_FC3AAD81 on rivetlogic_skype_SkypeGroup (userId);
