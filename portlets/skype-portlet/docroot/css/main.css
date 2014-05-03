@@ -1,0 +1,159 @@
+@import url(main_responsive.css);
+
+.skype-button {
+	display: inline-block;
+}
+
+.skype-users .icon-skype, .skype-users .icon-phone {
+	font-size: 1.6em;
+	cursor: pointer;
+}
+
+.skype-users .icon-skype span, .skype-users .icon-phone span{
+	display: none;
+}
+
+.skype-chat .icon-skype {
+	padding-left: 0.5em;
+}
+
+.phone-chat .icon-phone {
+	padding-left: 0.5em;
+}
+
+.skype-users-to-call {
+	border: solid 1px #CCC;
+	padding: 1em;
+	margin: 2em 0;
+}
+
+.aui .skype-users-to-call > button {
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+.skype-users-to-call ul.users li {
+	list-style: none;
+	background: #DEF;
+	padding: 0.5em;
+	display: inline-block;
+	margin-right: 1em;
+	margin-bottom: 0.5em;
+}
+
+.skype-users-to-call ul.users li:hover {
+	background: #CDE;
+}
+
+.skype-users-to-call .handle:after {
+	content: "\f00d";
+	width: 1em;
+	height: 1em;
+	font-family: 'fontawesome-alloy';
+	padding: 0.5em;
+	color: #b7414d;
+	font-size: 1.2em;
+}
+
+.skype-users-to-call .handle {
+ 	cursor: pointer;
+ }
+
+ .skype-portlet .portlet-msg-error {
+ 	display: none;
+ 	margin-top: 1.5em;
+ }
+
+.skype-portlet ul.groups > li {
+    list-style-type: none;
+    border-bottom: solid 1px #CCC;
+    padding: 0.5em;
+}
+.skype-portlet .btn.group i {
+    padding-right: 0.5em;
+    color: #666;
+}
+
+div.groups-list {
+	display: none;
+	border: solid 1px #CCC;
+	border-radius: 5px;
+	padding: 0.5em 2em 2em;
+	margin-top: 1em;
+    
+    ul {
+        margin: 0;
+    }
+    ul > li {
+        .group-options.show {
+            display: inline-block;
+        }
+        .group-options {
+            display: none;
+        }
+    }
+}
+.skype-portlet ul.groups > li:hover, .skype-portlet ul.groups > li:nth-child(2n):hover {
+    background: #EDF8FD;
+    cursor: pointer;
+}
+.skype-portlet ul.groups > li:nth-child(2n) {
+    background: #F5F5F5;
+}
+
+ul.users {
+	padding: 0;
+	margin: 0;
+}
+
+div.group-save {
+	display: none;
+	padding: 0.7em;
+	display: none;
+	border: solid 1px #CCC;
+	border-radius: 5px;
+	padding: 0.5em 2em 2em;
+	margin-top: 1em;
+}
+
+ul.groups > li {
+    position: relative;
+}
+
+.group-options {
+    position: absolute;
+	font-size: 1.5em;
+	right: 1em;
+	z-index: 1;
+	top: 0.2em;
+	display: none;
+}
+
+.options {
+	padding: 1.5em 0;
+}
+.group-options i {
+    padding: 0.5em;
+}
+.icon-pencil:hover, .icon-folder-open:hover {
+    color: #5BBAE8;
+}
+.icon-remove:hover {
+    color: red;
+}
+
+.edit-group {
+	display: none;
+}
+
+div.skype-modal * {
+	z-index: 300 !important;
+}
+
+
+#edit-options {
+    display: none;
+}
+h3.skype-group-name {
+    display: inline-block;
+}
