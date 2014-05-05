@@ -549,7 +549,9 @@ AUI.add('skype-portlet', function (Y, NAME) {
          */
         openSkypeListener: function () {
         	var me = this;
-            Y.one('#' + this.pns + 'skype-open').on("click", function () {
+            var skypeBtn = Y.one('#' + this.pns + 'skype-open');
+            var skypeClientFrameId = this.skypeHelper.generateDetectionFrame(skypeBtn.get('id'));
+            skypeBtn.on("click", function () {
                 var users = "",
                     items = Y.all('#' + me.pns + 'users li');
 
@@ -558,8 +560,7 @@ AUI.add('skype-portlet', function (Y, NAME) {
                     Y.all('#' + me.pns + 'users li').each(function (li) {
                         users += li.getAttribute("skypeid") + ";";
                     });
-
-                    location.href = "skype:" + users + "?chat&topic=" + encodeURIComponent(Y.one('#' + me.pns + 'group-name span').get("text"));
+                    me.skypeHelper.openSkypeURI(skypeClientFrameId, "skype:" + users + "?chat&topic=" + encodeURIComponent(Y.one('#' + me.pns + 'group-name span').get("text")));
 
                 } else {
                     Y.all(".skype-portlet .portlet-msg-error").setStyle("display", "block");
@@ -573,7 +574,9 @@ AUI.add('skype-portlet', function (Y, NAME) {
          */
         callSkypeListener: function () {
         	var me = this;
-            Y.one('#' + this.pns + 'skype-call').on("click", function () {
+            var skypeBtn = Y.one('#' + this.pns + 'skype-call');
+            var skypeClientFrameId = this.skypeHelper.generateDetectionFrame(skypeBtn.get('id'));
+            skypeBtn.on("click", function () {
                 var users = "",
                     items = Y.all('#' + me.pns + 'users li');
 
@@ -582,12 +585,35 @@ AUI.add('skype-portlet', function (Y, NAME) {
                     Y.all('#' + me.pns + 'users li').each(function (li) {
                         users += li.getAttribute("skypeid") + ";";
                     });
-                    location.href = "skype:" + users + "?call";
+                    me.skypeHelper.openSkypeURI(skypeClientFrameId, "skype:" + users + "?call");
                 } else {
                     Y.all(".skype-portlet .portlet-msg-error").setStyle("display", "block");
                 }
             });
         },
+        
+        
+        /* Skype helper: generates detection iframe and opens skype */
+        skypeHelper: {
+            /* Generates detection iframe */
+            generateDetectionFrame: function(buttonId) {
+                Skype.createDetectionFrame(document.getElementById(buttonId));
+                return Skype.detectSkypeClientFrameId;
+            },
+            /* Opens skype with the given uri */
+            openSkypeURI: function(skypeClientFrameId, uri) {
+                if (Skype.isIE10 || Skype.isIE9 || Skype.isIE8) {
+                    Skype.trySkypeUri_IE9_IE8(uri, '', '');
+                } else if ((Skype.isIOS6 || Skype.isIOS5 || Skype.isIOS4) && Skype.isSafari) {
+                    Skype.trySkypeUri_IOS_Safari(uri, skypeClientFrameId, '');
+                } else if (this.isAndroid && this.isFF) {
+                    Skype.trySkypeUri_Android_Firefox(uri, skypeClientFrameId, '');
+                } else {
+                    Skype.trySkypeUri_Generic(uri, skypeClientFrameId, '');
+                }
+            }
+        },
+        
         saveGroupListener: function () {
             var me = this,
                 id = Y.one('#' + this.pns + 'group-name span').getAttribute("group-id");
