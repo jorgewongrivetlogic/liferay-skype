@@ -197,7 +197,7 @@ AUI.add('skype-portlet', function (Y, NAME) {
             });
         },
 
-        addGroup: function (groupName, groupList) {
+        addGroup: function (groupName, groupList, cb) {
             var me = this,
                 data = Liferay.Util.ns(
                 this.get('portletNamespace'), {
@@ -210,6 +210,7 @@ AUI.add('skype-portlet', function (Y, NAME) {
                 data: data
             }, function (d) {
                 me.getGroups();
+                var exec = (typeof cb != 'undefined') ? cb(d) : null;
             });
         },
         
@@ -229,7 +230,7 @@ AUI.add('skype-portlet', function (Y, NAME) {
             });
         },
         
-        updateGroup: function (groupId, groupName, groupList) {
+        updateGroup: function (groupId, groupName, groupList, cb) {
             var me = this,
                 data = Liferay.Util.ns(
                 this.get('portletNamespace'), {
@@ -243,6 +244,7 @@ AUI.add('skype-portlet', function (Y, NAME) {
                 data: data
             }, function (d) {
                 me.getGroups();
+                var exec = (typeof cb != 'undefined') ? cb() : null;
             });
         },
 
@@ -436,6 +438,8 @@ AUI.add('skype-portlet', function (Y, NAME) {
                     skypeid: e.currentTarget.get("title"),
                     "user-id": e.currentTarget.getAttribute("user")
                 });
+                me.get('container').one('.group-save-btn').removeClass('disabled');
+                Y.one('#' + me.pns + 'group-name').removeClass('hidden');
             }, ".icon-skype");
         },
 
@@ -459,6 +463,8 @@ AUI.add('skype-portlet', function (Y, NAME) {
                     skypeid: e.currentTarget.get("title"),
                     "user-id": e.currentTarget.getAttribute("user")
                 });
+                me.get('container').one('.group-save-btn').removeClass('disabled');
+                Y.one('#' + me.pns + 'group-name').removeClass('hidden');
             }, ".icon-phone");
         },
 
@@ -466,8 +472,15 @@ AUI.add('skype-portlet', function (Y, NAME) {
          *   Adds listener which removes element from the list when the handler is clicked
          */
         setHandlerListener: function () {
+            var instance = this;
             Y.one(".skype-users-to-call").delegate('click', function () {
                 this.ancestor('li').remove();
+                var users = instance.getUsers();
+                if (users.length > 0) {
+                    instance.get('container').one('.group-save-btn').removeClass('disabled');
+                } else {
+                    instance.get('container').one('.group-save-btn').addClass('disabled');
+                }
             }, '.handle');
         },
 
@@ -618,16 +631,27 @@ AUI.add('skype-portlet', function (Y, NAME) {
             var me = this,
                 id = Y.one('#' + this.pns + 'group-name span').getAttribute("group-id");
             Y.one('#' + this.pns + 'skype-save').on("click", function () {
+                if (me.get('container').one('.group-save-btn').hasClass('disabled')) {
+                    return;
+                }
                 var users = [],
                     groupName = Y.one('#' + me.pns + 'group-name span').get("text");
                 users = me.getUsers();
                 id = Y.one('#' + me.pns + 'group-name span').getAttribute("group-id");
                 if (users.length > 0) {
                     if (id == "") {
-                        me.addGroup(groupName, users);
+                        me.addGroup(groupName, users, function(response) {
+                            Y.one('#' + me.pns + 'group-name span').setAttribute("group-id", response.id);
+                            me.showMessage(Liferay.Language.get('message.group.creation.title'),
+                                           Y.Lang.sub(Liferay.Language.get('message.group.creation.message'), {groupName: groupName}));
+                        });
                     } else {
-                        me.updateGroup(id, groupName, users);
+                        me.updateGroup(id, groupName, users, function() {
+                            me.showMessage(Liferay.Language.get('message.group.update.title'),
+                                           Y.Lang.sub(Liferay.Language.get('message.group.update.message'), {groupName: groupName}));
+                        });
                     }
+                    me.get('container').one('.group-save-btn').addClass('disabled');
                 } else {
                     me.showMessage(Liferay.Language.get('error'), Liferay.Language.get('error.message.select.one.user.to.save'));
                 }
@@ -654,6 +678,8 @@ AUI.add('skype-portlet', function (Y, NAME) {
         groupInfoListener: function () {
             var me = this;
             Y.one('#' + this.pns + 'groups-list').delegate("click", function (e) {
+                me.get('container').one('.group-save-btn').addClass('disabled');
+                Y.one('#' + me.pns + 'group-name').removeClass('hidden');
                 me.getGroupInfo(e.currentTarget.getAttribute("group-id"),
                 // using bind to keep the function context to "me"
                 Y.bind(me.updateGroupRender, me));
@@ -662,13 +688,6 @@ AUI.add('skype-portlet', function (Y, NAME) {
             }, ".icon-folder-open");
         },
 
-        groupLisListener: function () {
-            Y.one('#' + this.pns + 'groups-list').delegate("hover", function (e) {
-                e.currentTarget.one(".group-options").addClass('show');
-            }, function (e) {
-                e.currentTarget.one(".group-options").removeClass('show');
-            }, '#' + this.pns + 'groups > li');
-        },
 
         iconEditListener: function () {
             Y.one('#' + this.pns + 'groups-list').delegate("click", function (e) {
@@ -697,16 +716,28 @@ AUI.add('skype-portlet', function (Y, NAME) {
         },
 
         iconEditName: function () {
-            Y.one('#' + this.pns + 'group-name').delegate("click", function (e) {
-                var h3 = e.currentTarget.ancestor("h3"),
+            var me = this;
+            var editEvents = function(input) {
+                input.focus();
+                input.once('blur', function() {
+                    if (input.get('value') != '') {
+                        me.iconSaveName();
+                    } else {
+                        editEvents(input);
+                    }
+                });
+            };
+            Y.one('#' + this.pns + 'group-name').on("click", function (e) {
+                var h3 = e.currentTarget,
                     span = h3.one("span"),
                     spanText = span.get("text"),
                     edit = h3.next().setStyle("display", "block");
                 input = edit.one('input');
 
                 input.set("value", spanText);
+                editEvents(input);
                 h3.setStyle("display", "none");
-            }, "i");
+            });
         },
 
         iconCancelName: function () {
@@ -724,46 +755,34 @@ AUI.add('skype-portlet', function (Y, NAME) {
 
         iconSaveName: function () {
             var me = this;
-            Y.one("div.skype-users-to-call").delegate("click", function (e) {
-                var h3 = Y.one('#' + me.pns + 'group-name'),
-                span = h3.one("span");
-                
-                /* if user is editing name from groups list */
-                if (e.currentTarget.hasClass('list-item')) {
-                    var groupNode = e.currentTarget.ancestor('li');
-                    var groupId = groupNode.one('.icon-folder-open').getAttribute('group-id');
-                    var groupName = groupNode.one('input[type="text"]').get('value');
-                    if (span.getAttribute("group-id") == groupId) {
-                        span.set("text", groupName);
-                    }
-                    me.updateGroupName(groupId, groupName);
+            var h3 = Y.one('#' + me.pns + 'group-name'),
+            span = h3.one("span");
+
+            var edit = h3.next().setStyle("display", "none");
+            input = edit.one('input'), id = span.getAttribute("group-id");
+
+            span.set("text", input.val());
+            h3.setStyle("display", "block");
+
+            if (id != "") {
+                var users = me.getUsers();
+                if (users.length > 0) {
+                    me.updateGroup(id, input.val(), users);
                 } else {
-                    var edit = h3.next().setStyle("display", "none");
-                    input = edit.one('input'), id = span.getAttribute("group-id");
-    
-                    span.set("text", input.val());
-                    h3.setStyle("display", "block");
-    
-                    if (id != "") {
-                        var users = me.getUsers();
-                        if (users.length > 0) {
-                            me.updateGroup(id, input.val(), users);
-                        } else {
-                            me.showMessage(Liferay.Language.get('error'), Liferay.Language.get('error.message.select.one.user.to.save'));
-                        }
-                    }
+                    me.showMessage(Liferay.Language.get('error'), Liferay.Language.get('error.message.select.one.user.to.save'));
                 }
-                
-            }, ".edit-group .save-edit-group");
+            }
+
         },
 
         iconDeleteGroup: function () {
             var me = this;
             Y.one('#' + this.pns + 'groups-list').delegate("click", function (e) {
                 var id = e.currentTarget.ancestor('.group-options').one('.icon-folder-open');
+                var name = e.currentTarget.ancestor('li').one('.group-label').get('text');
                 id = id.getAttribute("group-id");
                 if (id != "") {
-                    var confirm = window.confirm(Liferay.Language.get("message.delete.group"));
+                    var confirm = window.confirm(Y.Lang.sub(Liferay.Language.get("message.delete.group"), {groupName: name}));
                     if (confirm) {
                         me.removeGroup(id);
                     }
@@ -836,14 +855,11 @@ AUI.add('skype-portlet', function (Y, NAME) {
             this.loadGroupListener();
             this.groupInfoListener();
 
-
-            this.groupLisListener();
             this.iconEditListener();
             this.iconSaveEditGroupListener();
             this.iconDeleteGroup();
             this.iconEditName();
             this.iconCancelName();
-            this.iconSaveName();
         }
     }, {
         ATTRS: {

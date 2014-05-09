@@ -14,12 +14,6 @@
                     display: none !important;
                 }
             }
-            ul > li {
-                .group-options.show,
-                .group-options {
-                    display: inline-block;
-                }
-            }
         }
     }
 }

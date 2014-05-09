@@ -32,7 +32,7 @@
     });
 </aui:script>
 
-<div class="skype-portlet">
+<div id="<portlet:namespace />" class="skype-portlet">
     <script type="text/javascript" src="http://www.skypeassets.com/i/scom/js/skype-uri.js"></script>
 
     <script id="${pns}item-template" type="text/x-handlebars-template">
@@ -122,9 +122,9 @@
             <li>
                 <span class="group-label">{{skype-group-name}}</span>
                 <ul class="group-options">
-                    <li class="icon-folder-open" group-id={{skype-group-id}}></li>
-                    <li class="icon-pencil"></li>
-                    <li class="icon-remove"></li>   
+                    <li title="<liferay-ui:message key="label.open.group"/>" class="icon-folder-open" group-id={{skype-group-id}}></li>
+                    <!-- <li class="icon-pencil"></li> -->
+                    <li title="<liferay-ui:message key="label.delete.group"/>" class="icon-remove"></li>   
                 </ul>
                 <div class="edit-group">
                     <input type="text">
@@ -137,21 +137,26 @@
 
 <div id="${pns}modal" class="skype-modal"></div>
 <div class="skype-users-to-call">
-    <h3 id="${pns}group-name" class="skype-group-name">
+    <h3 id="${pns}group-name" class="skype-group-name hidden">
     	<span><liferay-ui:message key="label.unnamed.group"/></span> 
     	<i class="icon-pencil"></i>
     </h3>
     <div class="edit-group">
     	<input type="text">
-    	<button class="btn save-edit-group"><liferay-ui:message key="save"/></button>
-        <button class="btn cancel-edit-group"><liferay-ui:message key="cancel"/></button>
+    	<!-- <button class="btn save-edit-group"><liferay-ui:message key="save"/></button>
+        <button class="btn cancel-edit-group"><liferay-ui:message key="cancel"/></button> -->
     </div>
 	<ul class="users" id="${pns}users">
 	</ul>
-	<button id="${pns}skype-open" class="btn"><liferay-ui:message key="action.open.skype"/></button>
-    <button id="${pns}skype-call" class="btn group"><i class="icon-phone"></i><liferay-ui:message key="action.open.skype"/>Call in Skype</button>
-    <button id="${pns}skype-save" class="btn group"><i class="icon-save"></i><liferay-ui:message key="action.save.group"/></button>
-    <button id="${pns}skype-load" class="btn group"><i class="icon-undo"></i><liferay-ui:message key="action.open.groups"/></button>
+	<div class="btn-toolbar">
+        <div class="btn-group">
+            <button id="${pns}skype-open" class="btn" title="<liferay-ui:message key="action.open.skype"/>"><i class="icon-comment"></i></button>
+            <button id="${pns}skype-call" class="btn group" title="<liferay-ui:message key="action.open.skype"/>"><i class="icon-phone"></i></button>
+            <button id="${pns}skype-save" class="btn group disabled group-save-btn" title="<liferay-ui:message key="action.save.group"/>"><i class="icon-save"></i></button>
+            <button id="${pns}skype-load" class="btn group" title="<liferay-ui:message key="action.open.groups"/>"><i class="icon-align-justify"></i></button>
+        </div>
+    </div>
+    
     <div class="portlet-msg-error"><liferay-ui:message key="error.message.select.one.user"/></div>
     <div id="${pns}groups-list" class="groups-list">
         <div class="groups-wrapper">

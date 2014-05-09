@@ -85,11 +85,8 @@ div.groups-list {
         margin: 0;
     }
     ul > li {
-        .group-options.show {
-            display: inline-block;
-        }
         .group-options {
-            display: none;
+            display: inline-block;
         }
     }
 }
@@ -154,6 +151,16 @@ div.skype-modal * {
 #edit-options {
     display: none;
 }
+
 h3.skype-group-name {
     display: inline-block;
+    .icon-pencil {
+        display: none;
+    }
+    
+}
+h3.skype-group-name:hover {
+    .icon-pencil {
+        display: inline-block;
+    }
 }
