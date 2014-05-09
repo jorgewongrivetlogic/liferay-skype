@@ -136,6 +136,12 @@ public class SkypeGroupLocalServiceClpInvoker {
 		_methodParameterTypes41 = new String[] {
 				"com.rivetlogic.skype.model.SkypeGroup"
 			};
+
+		_methodName42 = "findByByUserIdAndGroupName";
+
+		_methodParameterTypes42 = new String[] {
+				"java.lang.Long", "java.lang.String"
+			};
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -262,6 +268,12 @@ public class SkypeGroupLocalServiceClpInvoker {
 			return SkypeGroupLocalServiceUtil.updateSkypeGroup((com.rivetlogic.skype.model.SkypeGroup)arguments[0]);
 		}
 
+		if (_methodName42.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes42, parameterTypes)) {
+			return SkypeGroupLocalServiceUtil.findByByUserIdAndGroupName((java.lang.Long)arguments[0],
+				(java.lang.String)arguments[1]);
+		}
+
 		throw new UnsupportedOperationException();
 	}
 
@@ -309,4 +321,6 @@ public class SkypeGroupLocalServiceClpInvoker {
 	private String[] _methodParameterTypes40;
 	private String _methodName41;
 	private String[] _methodParameterTypes41;
+	private String _methodName42;
+	private String[] _methodParameterTypes42;
 }

@@ -294,6 +294,11 @@ public class SkypeGroupLocalServiceUtil {
 		return getService().createSkypeGroup(skypeGroup);
 	}
 
+	public static com.rivetlogic.skype.model.SkypeGroup findByByUserIdAndGroupName(
+		java.lang.Long userId, java.lang.String groupName) {
+		return getService().findByByUserIdAndGroupName(userId, groupName);
+	}
+
 	public static void clearService() {
 		_service = null;
 	}
