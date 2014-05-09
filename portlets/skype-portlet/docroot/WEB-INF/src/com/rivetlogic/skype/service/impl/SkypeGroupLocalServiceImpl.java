@@ -84,6 +84,16 @@ public class SkypeGroupLocalServiceImpl extends SkypeGroupLocalServiceBaseImpl {
 		return skypeGroup;
 	}
 	
+	public SkypeGroup findByByUserIdAndGroupName(Long userId, String groupName){
+		SkypeGroup skypeGroup = null;
+		try{
+			skypeGroup = skypeGroupPersistence.findByByUserIdAndGroupName(userId, groupName);
+		}catch (Exception e) {
+			LOG.warn(e);
+		}
+		return skypeGroup;
+	}
+	
 	private Date getTodayDate(){
 		Calendar calendar = Calendar.getInstance();
 		return calendar.getTime();

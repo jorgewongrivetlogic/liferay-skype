@@ -29,5 +29,9 @@
 		<finder name="ByUserId" return-type="Collection">
 			<finder-column name="userId" />
 		</finder>
+		<finder name="ByUserIdAndGroupName" return-type="SkypeGroup" unique="true">
+			<finder-column name="userId" />
+			<finder-column name="groupName" />
+		</finder>
 	</entity>
 </service-builder>

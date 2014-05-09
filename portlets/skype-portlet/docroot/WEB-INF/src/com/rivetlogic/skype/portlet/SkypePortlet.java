@@ -24,7 +24,9 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.servlet.SessionMessages;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
@@ -35,10 +37,12 @@ import com.rivetlogic.skype.beans.PreferencesBean;
 import com.rivetlogic.skype.model.SkypeGroup;
 import com.rivetlogic.skype.model.impl.SkypeGroupImpl;
 import com.rivetlogic.skype.service.SkypeGroupLocalServiceUtil;
-import com.rivetlogic.skype.util.Constants;
+import static com.rivetlogic.skype.util.Constants.*;
 import com.rivetlogic.skype.util.SkypeUtil;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -62,8 +66,10 @@ public class SkypePortlet extends MVCPortlet {
 	
 	@Override
 	public void render(RenderRequest request, RenderResponse response) throws IOException, PortletException {
+		ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
 		PreferencesBean prefBean = new PreferencesBean(request);
-		request.setAttribute(Constants.PREF_BEAN, prefBean);
+		request.setAttribute(SIGNED_IN, themeDisplay.isSignedIn());
+		request.setAttribute(PREF_BEAN, prefBean);
 		super.render(request, response);
 	}
 	
@@ -77,26 +83,26 @@ public class SkypePortlet extends MVCPortlet {
 	@Override
 	public void serveResource(ResourceRequest request, ResourceResponse response)
 			throws IOException, PortletException {
-		String cmd = ParamUtil.getString(request, Constants.CMD);
+		String cmd = ParamUtil.getString(request, CMD);
 		JSONObject jsonResponse = null;
 		
-		if (Constants.CMD_LIST_USERS.equalsIgnoreCase(cmd)) {	
+		if (CMD_LIST_USERS.equalsIgnoreCase(cmd)) {	
 			listUsers(request, response);
-		} else if(Constants.CMD_LIST_GROUPS.equalsIgnoreCase(cmd)){
+		} else if(CMD_LIST_GROUPS.equalsIgnoreCase(cmd)){
 			listGroups(request, response);
-		} else if(Constants.CMD_ADD_GROUP.equalsIgnoreCase(cmd)){
+		} else if(CMD_ADD_GROUP.equalsIgnoreCase(cmd)){
 			jsonResponse = JSONFactoryUtil.createJSONObject();
 			addGroup(request, response, jsonResponse);
-		} else if(Constants.CMD_UPDATE_GROUP.equalsIgnoreCase(cmd)){
+		} else if(CMD_UPDATE_GROUP.equalsIgnoreCase(cmd)){
 			jsonResponse = JSONFactoryUtil.createJSONObject();
 			updateGroup(request, response, jsonResponse);
-		} else if(Constants.CMD_UPDATE_GROUP_NAME.equalsIgnoreCase(cmd)){
+		} else if(CMD_UPDATE_GROUP_NAME.equalsIgnoreCase(cmd)){
 			jsonResponse = JSONFactoryUtil.createJSONObject();
 			updateGroupName(request, response, jsonResponse);
-		} else if(Constants.CMD_GET_GROUP.equalsIgnoreCase(cmd)){
+		} else if(CMD_GET_GROUP.equalsIgnoreCase(cmd)){
 			jsonResponse = JSONFactoryUtil.createJSONObject();
 			getGroupInfo(request, response, jsonResponse);
-		} else if(Constants.CMD_REMOVE_GROUP.equalsIgnoreCase(cmd)){
+		} else if(CMD_REMOVE_GROUP.equalsIgnoreCase(cmd)){
 			jsonResponse = JSONFactoryUtil.createJSONObject();
 			removeGroup(request, response, jsonResponse);
 		}
@@ -109,13 +115,15 @@ public class SkypePortlet extends MVCPortlet {
 	private void listUsers(PortletRequest request, PortletResponse response){
 		ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
 		ContactsBean cb = new ContactsBean(themeDisplay.getUserId(), themeDisplay.getCompanyId());
-		cb.setCurPage(ParamUtil.getInteger(request, Constants.CURRENT_PAGE, Constants.DEFAULT_ELEMENT_VALUE));
-		cb.setDelta(ParamUtil.getInteger(request, Constants.DELTA, Constants.DEFAULT_DELTA));
+		cb.setCurPage(ParamUtil.getInteger(request, CURRENT_PAGE, DEFAULT_ELEMENT_VALUE));
+		cb.setDelta(ParamUtil.getInteger(request, DELTA, DEFAULT_DELTA));
 		cb.setStart(cb.getCurPage() * cb.getDelta() - cb.getDelta());
 		cb.setEnd(cb.getStart() + cb.getDelta());
 		
-		cb.setObc(SkypeUtil.getSkypeComparator(ParamUtil.getString(request, Constants.ORDER_BY_COL), 
-				ParamUtil.getBoolean(request, Constants.IS_ASC)));
+		cb.setObc(SkypeUtil.getSkypeComparator(ParamUtil.getString(request, ORDER_BY_COL), 
+				ParamUtil.getBoolean(request, IS_ASC)));
+		cb.setSearch(ParamUtil.getString(request, SEARCH, null));
+		
 		cb.load();
 		
 		LOG.debug("Results: " + cb.toJSON());
@@ -125,8 +133,8 @@ public class SkypePortlet extends MVCPortlet {
 	private void listGroups(PortletRequest request, PortletResponse response){
 		ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
 		GroupsBean gb = new GroupsBean(themeDisplay.getUserId());
-		gb.setCurPage(ParamUtil.getInteger(request, Constants.CURRENT_PAGE, Constants.DEFAULT_ELEMENT_VALUE));
-		gb.setDelta(ParamUtil.getInteger(request, Constants.DELTA, Constants.DEFAULT_DELTA));
+		gb.setCurPage(ParamUtil.getInteger(request, CURRENT_PAGE, DEFAULT_ELEMENT_VALUE));
+		gb.setDelta(ParamUtil.getInteger(request, DELTA, DEFAULT_DELTA));
 		gb.setStart(gb.getCurPage() * gb.getDelta() - gb.getDelta());
 		gb.setEnd(gb.getStart() + gb.getDelta());
 		
@@ -137,112 +145,123 @@ public class SkypePortlet extends MVCPortlet {
 	}
 	
 	private void addGroup(PortletRequest request, PortletResponse response, JSONObject jsonResponse){
-		try {
+		try {	
+			List<String> errors = new ArrayList<String>();
 			SkypeGroup sg = skypeGroupFromRequest(request);
-			SkypeGroupLocalServiceUtil.createSkypeGroup(sg);
-			jsonResponse.put(Constants.CMD_SUCCESS, true);
+			if(SkypePortletValidator.validateSkypeGroup(sg, errors)){
+				SkypeGroupLocalServiceUtil.createSkypeGroup(sg);
+				jsonResponse.put(SKYPE_GROUP_ID, sg.getSkypeGroupId());
+				jsonResponse.put(CMD_SUCCESS, true);
+			}else{
+				jsonResponse.put(ERRORS, ListUtil.toString(errors, StringPool.BLANK, StringPool.COMMA));
+				jsonResponse.put(CMD_SUCCESS, false);
+			}
+			
 		} catch (JSONException e) {
-			jsonResponse.put(Constants.CMD_SUCCESS, false);
+			jsonResponse.put(CMD_SUCCESS, false);
 			LOG.error("Wrong format in ids: ", e);
 		}catch(Exception se){
-			jsonResponse.put(Constants.CMD_SUCCESS, false);
+			jsonResponse.put(CMD_SUCCESS, false);
 			LOG.error(se);
 		}
 		
 	}
 	
 	private void updateGroup(PortletRequest request, PortletResponse response, JSONObject jsonResponse){
-		Long skypeGroupId = ParamUtil.getLong(request, Constants.SKYPE_GROUP_ID, Constants.UNDEFINED_ID);
+		Long skypeGroupId = ParamUtil.getLong(request, SKYPE_GROUP_ID, UNDEFINED_ID);
 		SkypeGroup skypeGroup = null;
-		if(Constants.UNDEFINED_ID != skypeGroupId){
+		if(UNDEFINED_ID != skypeGroupId){
 			try {
+				List<String> errors = new ArrayList<String>();
 				skypeGroup = SkypeGroupLocalServiceUtil.getSkypeGroup(skypeGroupId);
 				JSONArray obj = contactsFromRequest(request);
-				skypeGroup.setGroupName(ParamUtil.getString(request, Constants.SKYPE_GROUP_NAME));
+				skypeGroup.setGroupName(ParamUtil.getString(request, SKYPE_GROUP_NAME));
 				skypeGroup.setSkypeContacts(obj.toString());
-				if(SkypePortletValidator.validateSkypeGroup(skypeGroup)){
+				if(SkypePortletValidator.validateSkypeGroup(skypeGroup, errors)){
 					SkypeGroupLocalServiceUtil.updateSkypeGroup(skypeGroup);
-					jsonResponse.put(Constants.CMD_SUCCESS, true);
+					jsonResponse.put(CMD_SUCCESS, true);
 				}else{
-					jsonResponse.put(Constants.CMD_SUCCESS, false);
+					jsonResponse.put(ERRORS, ListUtil.toString(errors, StringPool.BLANK, StringPool.COMMA));
+					jsonResponse.put(CMD_SUCCESS, false);
 				}
 				
 			}catch (JSONException e) {
-				jsonResponse.put(Constants.CMD_SUCCESS, false);
+				jsonResponse.put(CMD_SUCCESS, false);
 				LOG.error("Wrong format in ids: ", e);
 			}catch (Exception e) {
-				jsonResponse.put(Constants.CMD_SUCCESS, false);
+				jsonResponse.put(CMD_SUCCESS, false);
 				LOG.error(e);
 			}
 			
 		}else{
-			jsonResponse.put(Constants.CMD_SUCCESS, false);
+			jsonResponse.put(CMD_SUCCESS, false);
 		}
 	}
 	
 	private void updateGroupName(PortletRequest request, PortletResponse response, JSONObject jsonResponse){
-		Long skypeGroupId = ParamUtil.getLong(request, Constants.SKYPE_GROUP_ID, Constants.UNDEFINED_ID);
+		Long skypeGroupId = ParamUtil.getLong(request, SKYPE_GROUP_ID, UNDEFINED_ID);
 		SkypeGroup skypeGroup = null;
-		if(Constants.UNDEFINED_ID != skypeGroupId){
+		if(UNDEFINED_ID != skypeGroupId){
 			try {
+				List<String> errors = new ArrayList<String>();
 				skypeGroup = SkypeGroupLocalServiceUtil.getSkypeGroup(skypeGroupId);
-				skypeGroup.setGroupName(ParamUtil.getString(request, Constants.SKYPE_GROUP_NAME));
-				if(SkypePortletValidator.validateSkypeGroup(skypeGroup)){
+				skypeGroup.setGroupName(ParamUtil.getString(request, SKYPE_GROUP_NAME));
+				if(SkypePortletValidator.validateSkypeGroup(skypeGroup, errors)){
 					SkypeGroupLocalServiceUtil.updateSkypeGroup(skypeGroup);
-					jsonResponse.put(Constants.CMD_SUCCESS, true);
+					jsonResponse.put(CMD_SUCCESS, true);
 				}else{
-					jsonResponse.put(Constants.CMD_SUCCESS, false);
+					jsonResponse.put(CMD_SUCCESS, false);
 				}
 				
 			}catch (JSONException e) {
-				jsonResponse.put(Constants.CMD_SUCCESS, false);
+				jsonResponse.put(CMD_SUCCESS, false);
 				LOG.error("Wrong format in ids: ", e);
 			}catch (Exception e) {
-				jsonResponse.put(Constants.CMD_SUCCESS, false);
+				jsonResponse.put(CMD_SUCCESS, false);
 				LOG.error(e);
 			}
 			
 		}else{
-			jsonResponse.put(Constants.CMD_SUCCESS, false);
+			jsonResponse.put(CMD_SUCCESS, false);
 		}
 	}
 	
 	private void getGroupInfo(PortletRequest request, PortletResponse response, JSONObject jsonResponse){
-		Long skypeGroupId = ParamUtil.getLong(request, Constants.SKYPE_GROUP_ID, Constants.UNDEFINED_ID);
+		Long skypeGroupId = ParamUtil.getLong(request, SKYPE_GROUP_ID, UNDEFINED_ID);
 		SkypeGroup skypeGroup = null;
-		if(Constants.UNDEFINED_ID != skypeGroupId){
+		if(UNDEFINED_ID != skypeGroupId){
 			try {
 				skypeGroup = SkypeGroupLocalServiceUtil.getSkypeGroup(skypeGroupId);
-				jsonResponse.put(Constants.GROUP_INFO, skypeGroup.toJSON());
+				jsonResponse.put(GROUP_INFO, skypeGroup.toJSON());
 			} catch (Exception e) {
-				jsonResponse.put(Constants.CMD_SUCCESS, false);
+				jsonResponse.put(CMD_SUCCESS, false);
 				LOG.error(e);
 			}
 		}else{
-			jsonResponse.put(Constants.CMD_SUCCESS, false);
+			jsonResponse.put(CMD_SUCCESS, false);
 		}
 	}
 	
 	private void removeGroup(PortletRequest request, PortletResponse response, JSONObject jsonResponse){
-		Long skypeGroupId = ParamUtil.getLong(request, Constants.SKYPE_GROUP_ID, Constants.UNDEFINED_ID);
+		Long skypeGroupId = ParamUtil.getLong(request, SKYPE_GROUP_ID, UNDEFINED_ID);
 		
-		if(Constants.UNDEFINED_ID != skypeGroupId){
+		if(UNDEFINED_ID != skypeGroupId){
 			try {
 				SkypeGroupLocalServiceUtil.deleteSkypeGroup(skypeGroupId);
-				jsonResponse.put(Constants.CMD_SUCCESS, true);
+				jsonResponse.put(CMD_SUCCESS, true);
 			}catch (Exception e) {
-				jsonResponse.put(Constants.CMD_SUCCESS, false);
+				jsonResponse.put(CMD_SUCCESS, false);
 				LOG.error(e);
 			}
 		}else{
-			jsonResponse.put(Constants.CMD_SUCCESS, false);
+			jsonResponse.put(CMD_SUCCESS, false);
 		}
 	}
 	
 	private SkypeGroup skypeGroupFromRequest(PortletRequest request) throws JSONException{
 		ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
 		SkypeGroup skypeGroup = new SkypeGroupImpl();
-		skypeGroup.setGroupName(ParamUtil.getString(request, Constants.SKYPE_GROUP_NAME));
+		skypeGroup.setGroupName(ParamUtil.getString(request, SKYPE_GROUP_NAME));
 		skypeGroup.setUserId(themeDisplay.getUserId());
 		JSONArray obj = contactsFromRequest(request);
 		skypeGroup.setSkypeContacts(obj.toString());
@@ -250,6 +269,6 @@ public class SkypePortlet extends MVCPortlet {
 	}
 	
 	private JSONArray contactsFromRequest(PortletRequest request) throws JSONException{
-		return JSONFactoryUtil.createJSONArray(ParamUtil.getString(request, Constants.IDS));
+		return JSONFactoryUtil.createJSONArray(ParamUtil.getString(request, IDS));
 	}
 }

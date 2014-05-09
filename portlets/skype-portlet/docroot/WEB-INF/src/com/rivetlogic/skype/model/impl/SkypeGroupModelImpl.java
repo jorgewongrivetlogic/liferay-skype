@@ -87,8 +87,9 @@ public class SkypeGroupModelImpl extends BaseModelImpl<SkypeGroup>
 	public static final boolean COLUMN_BITMASK_ENABLED = GetterUtil.getBoolean(com.liferay.util.service.ServiceProps.get(
 				"value.object.column.bitmask.enabled.com.rivetlogic.skype.model.SkypeGroup"),
 			true);
-	public static long USERID_COLUMN_BITMASK = 1L;
-	public static long MODIFIEDDATE_COLUMN_BITMASK = 2L;
+	public static long GROUPNAME_COLUMN_BITMASK = 1L;
+	public static long USERID_COLUMN_BITMASK = 2L;
+	public static long MODIFIEDDATE_COLUMN_BITMASK = 4L;
 	public static final long LOCK_EXPIRATION_TIME = GetterUtil.getLong(com.liferay.util.service.ServiceProps.get(
 				"lock.expiration.time.com.rivetlogic.skype.model.SkypeGroup"));
 
@@ -276,7 +277,17 @@ public class SkypeGroupModelImpl extends BaseModelImpl<SkypeGroup>
 
 	@Override
 	public void setGroupName(String groupName) {
+		_columnBitmask |= GROUPNAME_COLUMN_BITMASK;
+
+		if (_originalGroupName == null) {
+			_originalGroupName = _groupName;
+		}
+
 		_groupName = groupName;
+	}
+
+	public String getOriginalGroupName() {
+		return GetterUtil.getString(_originalGroupName);
 	}
 
 	@JSON
@@ -387,6 +398,8 @@ public class SkypeGroupModelImpl extends BaseModelImpl<SkypeGroup>
 		skypeGroupModelImpl._originalUserId = skypeGroupModelImpl._userId;
 
 		skypeGroupModelImpl._setOriginalUserId = false;
+
+		skypeGroupModelImpl._originalGroupName = skypeGroupModelImpl._groupName;
 
 		skypeGroupModelImpl._columnBitmask = 0;
 	}
@@ -522,6 +535,7 @@ public class SkypeGroupModelImpl extends BaseModelImpl<SkypeGroup>
 	private Date _createDate;
 	private Date _modifiedDate;
 	private String _groupName;
+	private String _originalGroupName;
 	private String _skypeContacts;
 	private long _columnBitmask;
 	private SkypeGroup _escapedModel;

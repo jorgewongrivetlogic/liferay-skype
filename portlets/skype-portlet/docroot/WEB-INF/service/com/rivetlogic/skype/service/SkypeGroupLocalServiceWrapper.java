@@ -310,6 +310,13 @@ public class SkypeGroupLocalServiceWrapper implements SkypeGroupLocalService,
 		return _skypeGroupLocalService.createSkypeGroup(skypeGroup);
 	}
 
+	@Override
+	public com.rivetlogic.skype.model.SkypeGroup findByByUserIdAndGroupName(
+		java.lang.Long userId, java.lang.String groupName) {
+		return _skypeGroupLocalService.findByByUserIdAndGroupName(userId,
+			groupName);
+	}
+
 	/**
 	 * @deprecated As of 6.1.0, replaced by {@link #getWrappedService}
 	 */

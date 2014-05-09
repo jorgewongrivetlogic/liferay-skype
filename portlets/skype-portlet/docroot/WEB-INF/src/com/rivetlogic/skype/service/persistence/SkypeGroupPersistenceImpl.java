@@ -34,6 +34,7 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnmodifiableList;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
@@ -570,6 +571,270 @@ public class SkypeGroupPersistenceImpl extends BasePersistenceImpl<SkypeGroup>
 	}
 
 	private static final String _FINDER_COLUMN_BYUSERID_USERID_2 = "skypeGroup.userId = ?";
+	public static final FinderPath FINDER_PATH_FETCH_BY_BYUSERIDANDGROUPNAME = new FinderPath(SkypeGroupModelImpl.ENTITY_CACHE_ENABLED,
+			SkypeGroupModelImpl.FINDER_CACHE_ENABLED, SkypeGroupImpl.class,
+			FINDER_CLASS_NAME_ENTITY, "fetchByByUserIdAndGroupName",
+			new String[] { Long.class.getName(), String.class.getName() },
+			SkypeGroupModelImpl.USERID_COLUMN_BITMASK |
+			SkypeGroupModelImpl.GROUPNAME_COLUMN_BITMASK);
+	public static final FinderPath FINDER_PATH_COUNT_BY_BYUSERIDANDGROUPNAME = new FinderPath(SkypeGroupModelImpl.ENTITY_CACHE_ENABLED,
+			SkypeGroupModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+			"countByByUserIdAndGroupName",
+			new String[] { Long.class.getName(), String.class.getName() });
+
+	/**
+	 * Returns the skype group where userId = &#63; and groupName = &#63; or throws a {@link com.rivetlogic.skype.NoSuchSkypeGroupException} if it could not be found.
+	 *
+	 * @param userId the user ID
+	 * @param groupName the group name
+	 * @return the matching skype group
+	 * @throws com.rivetlogic.skype.NoSuchSkypeGroupException if a matching skype group could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public SkypeGroup findByByUserIdAndGroupName(long userId, String groupName)
+		throws NoSuchSkypeGroupException, SystemException {
+		SkypeGroup skypeGroup = fetchByByUserIdAndGroupName(userId, groupName);
+
+		if (skypeGroup == null) {
+			StringBundler msg = new StringBundler(6);
+
+			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+			msg.append("userId=");
+			msg.append(userId);
+
+			msg.append(", groupName=");
+			msg.append(groupName);
+
+			msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+			if (_log.isWarnEnabled()) {
+				_log.warn(msg.toString());
+			}
+
+			throw new NoSuchSkypeGroupException(msg.toString());
+		}
+
+		return skypeGroup;
+	}
+
+	/**
+	 * Returns the skype group where userId = &#63; and groupName = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 *
+	 * @param userId the user ID
+	 * @param groupName the group name
+	 * @return the matching skype group, or <code>null</code> if a matching skype group could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public SkypeGroup fetchByByUserIdAndGroupName(long userId, String groupName)
+		throws SystemException {
+		return fetchByByUserIdAndGroupName(userId, groupName, true);
+	}
+
+	/**
+	 * Returns the skype group where userId = &#63; and groupName = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 *
+	 * @param userId the user ID
+	 * @param groupName the group name
+	 * @param retrieveFromCache whether to use the finder cache
+	 * @return the matching skype group, or <code>null</code> if a matching skype group could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public SkypeGroup fetchByByUserIdAndGroupName(long userId,
+		String groupName, boolean retrieveFromCache) throws SystemException {
+		Object[] finderArgs = new Object[] { userId, groupName };
+
+		Object result = null;
+
+		if (retrieveFromCache) {
+			result = FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_BYUSERIDANDGROUPNAME,
+					finderArgs, this);
+		}
+
+		if (result instanceof SkypeGroup) {
+			SkypeGroup skypeGroup = (SkypeGroup)result;
+
+			if ((userId != skypeGroup.getUserId()) ||
+					!Validator.equals(groupName, skypeGroup.getGroupName())) {
+				result = null;
+			}
+		}
+
+		if (result == null) {
+			StringBundler query = new StringBundler(4);
+
+			query.append(_SQL_SELECT_SKYPEGROUP_WHERE);
+
+			query.append(_FINDER_COLUMN_BYUSERIDANDGROUPNAME_USERID_2);
+
+			boolean bindGroupName = false;
+
+			if (groupName == null) {
+				query.append(_FINDER_COLUMN_BYUSERIDANDGROUPNAME_GROUPNAME_1);
+			}
+			else if (groupName.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_BYUSERIDANDGROUPNAME_GROUPNAME_3);
+			}
+			else {
+				bindGroupName = true;
+
+				query.append(_FINDER_COLUMN_BYUSERIDANDGROUPNAME_GROUPNAME_2);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(userId);
+
+				if (bindGroupName) {
+					qPos.add(groupName);
+				}
+
+				List<SkypeGroup> list = q.list();
+
+				if (list.isEmpty()) {
+					FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_BYUSERIDANDGROUPNAME,
+						finderArgs, list);
+				}
+				else {
+					SkypeGroup skypeGroup = list.get(0);
+
+					result = skypeGroup;
+
+					cacheResult(skypeGroup);
+
+					if ((skypeGroup.getUserId() != userId) ||
+							(skypeGroup.getGroupName() == null) ||
+							!skypeGroup.getGroupName().equals(groupName)) {
+						FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_BYUSERIDANDGROUPNAME,
+							finderArgs, skypeGroup);
+					}
+				}
+			}
+			catch (Exception e) {
+				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_BYUSERIDANDGROUPNAME,
+					finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		if (result instanceof List<?>) {
+			return null;
+		}
+		else {
+			return (SkypeGroup)result;
+		}
+	}
+
+	/**
+	 * Removes the skype group where userId = &#63; and groupName = &#63; from the database.
+	 *
+	 * @param userId the user ID
+	 * @param groupName the group name
+	 * @return the skype group that was removed
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public SkypeGroup removeByByUserIdAndGroupName(long userId, String groupName)
+		throws NoSuchSkypeGroupException, SystemException {
+		SkypeGroup skypeGroup = findByByUserIdAndGroupName(userId, groupName);
+
+		return remove(skypeGroup);
+	}
+
+	/**
+	 * Returns the number of skype groups where userId = &#63; and groupName = &#63;.
+	 *
+	 * @param userId the user ID
+	 * @param groupName the group name
+	 * @return the number of matching skype groups
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public int countByByUserIdAndGroupName(long userId, String groupName)
+		throws SystemException {
+		FinderPath finderPath = FINDER_PATH_COUNT_BY_BYUSERIDANDGROUPNAME;
+
+		Object[] finderArgs = new Object[] { userId, groupName };
+
+		Long count = (Long)FinderCacheUtil.getResult(finderPath, finderArgs,
+				this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(3);
+
+			query.append(_SQL_COUNT_SKYPEGROUP_WHERE);
+
+			query.append(_FINDER_COLUMN_BYUSERIDANDGROUPNAME_USERID_2);
+
+			boolean bindGroupName = false;
+
+			if (groupName == null) {
+				query.append(_FINDER_COLUMN_BYUSERIDANDGROUPNAME_GROUPNAME_1);
+			}
+			else if (groupName.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_BYUSERIDANDGROUPNAME_GROUPNAME_3);
+			}
+			else {
+				bindGroupName = true;
+
+				query.append(_FINDER_COLUMN_BYUSERIDANDGROUPNAME_GROUPNAME_2);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(userId);
+
+				if (bindGroupName) {
+					qPos.add(groupName);
+				}
+
+				count = (Long)q.uniqueResult();
+
+				FinderCacheUtil.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception e) {
+				FinderCacheUtil.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	private static final String _FINDER_COLUMN_BYUSERIDANDGROUPNAME_USERID_2 = "skypeGroup.userId = ? AND ";
+	private static final String _FINDER_COLUMN_BYUSERIDANDGROUPNAME_GROUPNAME_1 = "skypeGroup.groupName IS NULL";
+	private static final String _FINDER_COLUMN_BYUSERIDANDGROUPNAME_GROUPNAME_2 = "skypeGroup.groupName = ?";
+	private static final String _FINDER_COLUMN_BYUSERIDANDGROUPNAME_GROUPNAME_3 = "(skypeGroup.groupName IS NULL OR skypeGroup.groupName = '')";
 
 	public SkypeGroupPersistenceImpl() {
 		setModelClass(SkypeGroup.class);
@@ -584,6 +849,10 @@ public class SkypeGroupPersistenceImpl extends BasePersistenceImpl<SkypeGroup>
 	public void cacheResult(SkypeGroup skypeGroup) {
 		EntityCacheUtil.putResult(SkypeGroupModelImpl.ENTITY_CACHE_ENABLED,
 			SkypeGroupImpl.class, skypeGroup.getPrimaryKey(), skypeGroup);
+
+		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_BYUSERIDANDGROUPNAME,
+			new Object[] { skypeGroup.getUserId(), skypeGroup.getGroupName() },
+			skypeGroup);
 
 		skypeGroup.resetOriginalValues();
 	}
@@ -641,6 +910,8 @@ public class SkypeGroupPersistenceImpl extends BasePersistenceImpl<SkypeGroup>
 
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		clearUniqueFindersCache(skypeGroup);
 	}
 
 	@Override
@@ -651,6 +922,62 @@ public class SkypeGroupPersistenceImpl extends BasePersistenceImpl<SkypeGroup>
 		for (SkypeGroup skypeGroup : skypeGroups) {
 			EntityCacheUtil.removeResult(SkypeGroupModelImpl.ENTITY_CACHE_ENABLED,
 				SkypeGroupImpl.class, skypeGroup.getPrimaryKey());
+
+			clearUniqueFindersCache(skypeGroup);
+		}
+	}
+
+	protected void cacheUniqueFindersCache(SkypeGroup skypeGroup) {
+		if (skypeGroup.isNew()) {
+			Object[] args = new Object[] {
+					skypeGroup.getUserId(), skypeGroup.getGroupName()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_BYUSERIDANDGROUPNAME,
+				args, Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_BYUSERIDANDGROUPNAME,
+				args, skypeGroup);
+		}
+		else {
+			SkypeGroupModelImpl skypeGroupModelImpl = (SkypeGroupModelImpl)skypeGroup;
+
+			if ((skypeGroupModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_BYUSERIDANDGROUPNAME.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						skypeGroup.getUserId(), skypeGroup.getGroupName()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_BYUSERIDANDGROUPNAME,
+					args, Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_BYUSERIDANDGROUPNAME,
+					args, skypeGroup);
+			}
+		}
+	}
+
+	protected void clearUniqueFindersCache(SkypeGroup skypeGroup) {
+		SkypeGroupModelImpl skypeGroupModelImpl = (SkypeGroupModelImpl)skypeGroup;
+
+		Object[] args = new Object[] {
+				skypeGroup.getUserId(), skypeGroup.getGroupName()
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_BYUSERIDANDGROUPNAME,
+			args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_BYUSERIDANDGROUPNAME,
+			args);
+
+		if ((skypeGroupModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_BYUSERIDANDGROUPNAME.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					skypeGroupModelImpl.getOriginalUserId(),
+					skypeGroupModelImpl.getOriginalGroupName()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_BYUSERIDANDGROUPNAME,
+				args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_BYUSERIDANDGROUPNAME,
+				args);
 		}
 	}
 
@@ -816,6 +1143,9 @@ public class SkypeGroupPersistenceImpl extends BasePersistenceImpl<SkypeGroup>
 
 		EntityCacheUtil.putResult(SkypeGroupModelImpl.ENTITY_CACHE_ENABLED,
 			SkypeGroupImpl.class, skypeGroup.getPrimaryKey(), skypeGroup);
+
+		clearUniqueFindersCache(skypeGroup);
+		cacheUniqueFindersCache(skypeGroup);
 
 		return skypeGroup;
 	}

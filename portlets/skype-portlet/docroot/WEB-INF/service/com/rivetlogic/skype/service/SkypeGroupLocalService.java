@@ -263,4 +263,7 @@ public interface SkypeGroupLocalService extends BaseLocalService,
 		com.rivetlogic.skype.model.SkypeGroup skypeGroup)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
+
+	public com.rivetlogic.skype.model.SkypeGroup findByByUserIdAndGroupName(
+		java.lang.Long userId, java.lang.String groupName);
 }

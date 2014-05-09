@@ -33,6 +33,7 @@ import java.util.List;
 public class ContactsBean extends PaginationBean{
 	private Long userId;
 	private Long companyId;
+	private String search;
 	private List<UserBean> users;
 	
 	
@@ -63,10 +64,18 @@ public class ContactsBean extends PaginationBean{
 		return jsonUsers;
 	}
 	
+	public String getSearch(){
+		return search;
+	}
+	
+	public void setSearch(String search){
+		this.search = search;
+	}
+	
 	@Override
 	public void load(){
-		total = SkypeUtil.getUserBeansCount(companyId);
-		users = SkypeUtil.getUserBeans(companyId, start, end, obc);
+		total = SkypeUtil.getUserBeansCount(companyId, search);
+		users = SkypeUtil.getUserBeans(companyId, search, start, end, obc);
 	}
 	
 }
