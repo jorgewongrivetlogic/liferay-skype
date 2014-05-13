@@ -143,13 +143,16 @@
 	<div class="btn-toolbar">
         <div class="btn-group">
             <button id="${pns}skype-open" class="btn" title="<liferay-ui:message key="action.open.skype"/>"><i class="icon-comment"></i></button>
-            <button id="${pns}skype-call" class="btn group" title="<liferay-ui:message key="action.open.skype"/>"><i class="icon-phone"></i></button>
+            <button id="${pns}skype-call" class="btn group" title="<liferay-ui:message key="action.open.call"/>"><i class="icon-phone"></i></button>
             <button id="${pns}skype-save" class="btn group disabled group-save-btn" title="<liferay-ui:message key="action.save.group"/>"><i class="icon-save"></i></button>
             <button id="${pns}skype-load" class="btn group" title="<liferay-ui:message key="action.open.groups"/>"><i class="icon-align-justify"></i></button>
+            <button id="${pns}skype-new-group" class="btn group" title="<liferay-ui:message key="action.new.group"/>"><i class="icon-file"></i></button>
         </div>
     </div>
     
     <div class="portlet-msg-error"><liferay-ui:message key="error.message.select.one.user"/></div>
+    
+        
     <div id="${pns}groups-list" class="groups-list">
         <div class="groups-wrapper">
         </div>
@@ -161,8 +164,14 @@
         <input type="text" id="${pns}group-name-edit">
         <button id="${pns}skype-save-as" class="btn group"><i class="icon-save"></i><liferay-ui:message key="save"/></button>
     </div>
+     
 </div>
-
-<div id="${pns}users-table"></div>
-<div id="${pns}table-pagination" class="pagination"></div>
+<div class="users-container well">
+    <form class="form-search">
+        <input type="text" placeholder="search keyword..." class="input-medium search-query">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+    <div id="${pns}users-table"></div>
+    <div id="${pns}table-pagination" class="pagination"></div>
+</div>
 </div>

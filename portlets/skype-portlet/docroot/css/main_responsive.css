@@ -17,3 +17,14 @@
         }
     }
 }
+@include respond-to(phone) {
+    .aui .skype-portlet {
+        .form-search {
+            input {
+                width: 90%;
+                padding: 5px 5%;
+                margin: 0;
+            }
+        }
+    }
+}
