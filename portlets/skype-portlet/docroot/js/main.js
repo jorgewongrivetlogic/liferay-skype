@@ -298,6 +298,19 @@ AUI.add('skype-portlet', function (Y, NAME) {
                         changeRequest: function(event) {
                             me.currentPage = event.state.page;
                             me.listUsersCall();
+                            
+                            var paginationItemsDisplayed = 0;
+                            var paginationItems = this.get('boundingBox').all('li a');
+                            paginationItems.removeClass('hidden');
+                            paginationItems.each(function(node) {
+                                if (Y.Lang.isNumber(parseInt(node.get('text')))) {
+                                    var itemNumber = parseInt(node.get('text'));
+                                    if (Math.abs(itemNumber - me.currentPage) > me.get('usersPerPage')) {
+                                        node.addClass('hidden');
+                                    } 
+                                };
+                            });
+                            
                         }
                     }
                 }).render();
