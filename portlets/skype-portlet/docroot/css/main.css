@@ -143,6 +143,11 @@ ul.groups > li {
 	display: none;
 }
 
+.skype-portlet .edit-group input {
+    height: 43px;
+    font-size: 24.5px;
+}
+
 div.skype-modal * {
 	z-index: 300 !important;
 }

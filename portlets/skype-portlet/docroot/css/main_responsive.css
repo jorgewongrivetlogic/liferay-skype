@@ -15,6 +15,12 @@
                 }
             }
         }
+        h3.skype-group-name,
+        h3.skype-group-name:hover {
+            .icon-pencil {
+                display: inline-block;
+            }
+        }
     }
 }
 @include respond-to(phone) {
