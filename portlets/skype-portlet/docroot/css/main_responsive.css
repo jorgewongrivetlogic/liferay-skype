@@ -21,6 +21,11 @@
                 display: inline-block;
             }
         }
+        .form-search {
+            button {
+                display: inline-block;
+            }
+        }
     }
 }
 @include respond-to(phone) {

@@ -152,6 +152,13 @@ div.skype-modal * {
 	z-index: 300 !important;
 }
 
+.skype-portlet {
+    .form-search {
+        button {
+            display: none;
+        }
+    }
+}
 
 #edit-options {
     display: none;

@@ -552,6 +552,7 @@ AUI.add('skype-portlet', function (Y, NAME) {
                 if (!groupNameNode.hasClass('hidden')) {
                     groupNameNode.one('span').set('text', Liferay.Language.get('label.unnamed.group'));
                     groupNameNode.one('span').removeAttribute('group-id');
+                    groupNameNode.addClass('hidden');
                     Y.one('#' + me.pns + 'users').get("childNodes").remove();
                 }
             });
