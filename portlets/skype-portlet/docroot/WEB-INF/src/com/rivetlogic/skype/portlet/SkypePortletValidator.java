@@ -49,15 +49,13 @@ public class SkypePortletValidator {
 	
 	public static void checkUniqueName(SkypeGroup skypeGroup, List<String> errors){
 		//exists, so I have to check 
-		if(skypeGroup.getSkypeGroupId() != DEFAULT_ELEMENT_ID){
-			SkypeGroup skypeGroupFound = SkypeGroupLocalServiceUtil.
-					findByByUserIdAndGroupName(skypeGroup.getUserId(), skypeGroup.getGroupName());
-			if(skypeGroupFound != null){
-				if(skypeGroupFound.getSkypeGroupId() != skypeGroup.getSkypeGroupId()){
-					errors.add(NOT_UNIQUE_GROUP);
-				}
+		
+		SkypeGroup skypeGroupFound = SkypeGroupLocalServiceUtil.
+				findByByUserIdAndGroupName(skypeGroup.getUserId(), skypeGroup.getGroupName());
+		if(skypeGroupFound != null){
+			if(skypeGroupFound.getSkypeGroupId() != skypeGroup.getSkypeGroupId()){
+				errors.add(NOT_UNIQUE_GROUP);
 			}
-			
 		}
 	}
 }
