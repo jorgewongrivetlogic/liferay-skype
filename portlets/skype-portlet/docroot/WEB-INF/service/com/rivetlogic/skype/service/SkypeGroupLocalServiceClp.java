@@ -131,6 +131,12 @@ public class SkypeGroupLocalServiceClp implements SkypeGroupLocalService {
 		_methodParameterTypes21 = new String[] {
 				"com.rivetlogic.skype.model.SkypeGroup"
 			};
+
+		_methodName22 = "findByByUserIdAndGroupName";
+
+		_methodParameterTypes22 = new String[] {
+				"java.lang.Long", "java.lang.String"
+			};
 	}
 
 	@Override
@@ -786,6 +792,35 @@ public class SkypeGroupLocalServiceClp implements SkypeGroupLocalService {
 		return (com.rivetlogic.skype.model.SkypeGroup)ClpSerializer.translateOutput(returnObj);
 	}
 
+	@Override
+	public com.rivetlogic.skype.model.SkypeGroup findByByUserIdAndGroupName(
+		java.lang.Long userId, java.lang.String groupName) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName22,
+					_methodParameterTypes22,
+					new Object[] {
+						ClpSerializer.translateInput(userId),
+						
+					ClpSerializer.translateInput(groupName)
+					});
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (com.rivetlogic.skype.model.SkypeGroup)ClpSerializer.translateOutput(returnObj);
+	}
+
 	private InvokableLocalService _invokableLocalService;
 	private String _methodName0;
 	private String[] _methodParameterTypes0;
@@ -829,4 +864,6 @@ public class SkypeGroupLocalServiceClp implements SkypeGroupLocalService {
 	private String[] _methodParameterTypes20;
 	private String _methodName21;
 	private String[] _methodParameterTypes21;
+	private String _methodName22;
+	private String[] _methodParameterTypes22;
 }

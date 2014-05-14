@@ -27,6 +27,7 @@ import com.liferay.util.portlet.PortletProps;
 public class Constants {
 	public static final String PROP_DELTA = "default.delta.view";
 	
+	public static final String SIGNED_IN = "isSignedIn";
 	public static final int DEFAULT_INT_VALUE = 0;
 	public static final int DEFAULT_ELEMENT_VALUE = 1;
 	public static final int UNDEFINED_ID = -1;
@@ -68,10 +69,18 @@ public class Constants {
 	public static String CURRENT_PAGE = "curPage";
 	public static String DELTA = "delta";
 	public static String ORDER_BY_COL = "orderByCol";
-	public static String IS_ASC = "isAsc"; 
+	public static String IS_ASC = "isAsc";
+	public static String SEARCH = "search";
 	
 	//Preferences Params
 	public static String USERS_PER_PAGE = "usersPerPage";
 	public static String GROUPS_PER_PAGE = "groupsPerPage";
 	public static String PREF_BEAN = "prefBean";
+	
+	//Error messages
+	public static String ERRORS = "errors"; 
+	public static String EMPTY_GROUP_NAME = "empty.group.name";
+	public static String EMPTY_CONTACTS = "empty.contacts";
+	public static String NOT_UNIQUE_GROUP = "not.unique.group";
+	
 }

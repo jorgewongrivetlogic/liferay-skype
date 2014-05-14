@@ -72,12 +72,18 @@ public class SkypeUtil {
 		return userBean;
 	}
 	
-	public static List<UserBean> getUserBeans(Long companyId, int start, int end, OrderByComparator obc){
+	public static List<UserBean> getUserBeans(Long companyId, String search, int start, int end, OrderByComparator obc){
 		List<UserBean> results = new ArrayList<UserBean>();
 		List<User> users = null;
 		UserBean userBean = null;
 		try{
-			users = UserLocalServiceUtil.search(companyId, null, WorkflowConstants.STATUS_APPROVED, null, start, end, obc);
+			if(search == null){
+				users = UserLocalServiceUtil.search(companyId, null, WorkflowConstants.STATUS_APPROVED, null, start, end, obc);
+			}else{
+				users = UserLocalServiceUtil.search(companyId, search, null, search, null, null,
+						WorkflowConstants.STATUS_APPROVED, null, false, start, end, obc);
+			}
+			
 			for(User user : users){
 				userBean = parseUser(user);
 				results.add(userBean);
@@ -89,10 +95,16 @@ public class SkypeUtil {
 		return results;
 	}
 	
-	public static int getUserBeansCount(Long companyId){
+	public static int getUserBeansCount(Long companyId, String search){
 		int count = Constants.DEFAULT_INT_VALUE;
 		try{
-			count = UserLocalServiceUtil.searchCount(companyId, null, WorkflowConstants.STATUS_APPROVED, null);
+			if(search == null){
+				count = UserLocalServiceUtil.searchCount(companyId, null, WorkflowConstants.STATUS_APPROVED, null);
+			}else{
+				count = UserLocalServiceUtil.searchCount(companyId, search, null, search, null,
+						null, WorkflowConstants.STATUS_APPROVED, null, false);
+			}
+			
 		}catch(Exception e){
 			LOG.error(e);
 		}

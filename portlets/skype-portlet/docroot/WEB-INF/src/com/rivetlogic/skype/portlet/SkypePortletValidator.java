@@ -19,6 +19,14 @@ package com.rivetlogic.skype.portlet;
 
 import com.liferay.portal.kernel.util.StringPool;
 import com.rivetlogic.skype.model.SkypeGroup;
+import com.rivetlogic.skype.service.SkypeGroupLocalServiceUtil;
+
+import static com.rivetlogic.skype.util.Constants.EMPTY_GROUP_NAME;
+import static com.rivetlogic.skype.util.Constants.EMPTY_CONTACTS;
+import static com.rivetlogic.skype.util.Constants.DEFAULT_ELEMENT_ID;
+import static com.rivetlogic.skype.util.Constants.NOT_UNIQUE_GROUP;
+
+import java.util.List;
 
 /**
  * @author christopherjimenez
@@ -26,13 +34,28 @@ import com.rivetlogic.skype.model.SkypeGroup;
  */
 public class SkypePortletValidator {
 
-	public static boolean validateSkypeGroup(SkypeGroup skypeGroup){
+	public static boolean validateSkypeGroup(SkypeGroup skypeGroup, List<String> errors){
+		
 		if(StringPool.BLANK.equals(skypeGroup.getGroupName())){
-			return false;
+			errors.add(EMPTY_GROUP_NAME);
 		}
 		if(StringPool.BLANK.equals(skypeGroup.getSkypeContacts())){
-			return false;
+			errors.add(EMPTY_CONTACTS);
 		}
-		return true;
+		
+		checkUniqueName(skypeGroup, errors);
+		return errors.isEmpty();
+	}
+	
+	public static void checkUniqueName(SkypeGroup skypeGroup, List<String> errors){
+		//exists, so I have to check 
+		
+		SkypeGroup skypeGroupFound = SkypeGroupLocalServiceUtil.
+				findByByUserIdAndGroupName(skypeGroup.getUserId(), skypeGroup.getGroupName());
+		if(skypeGroupFound != null){
+			if(skypeGroupFound.getSkypeGroupId() != skypeGroup.getSkypeGroupId()){
+				errors.add(NOT_UNIQUE_GROUP);
+			}
+		}
 	}
 }

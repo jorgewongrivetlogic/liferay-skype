@@ -14,11 +14,27 @@
                     display: none !important;
                 }
             }
-            ul > li {
-                .group-options.show,
-                .group-options {
-                    display: inline-block;
-                }
+        }
+        h3.skype-group-name,
+        h3.skype-group-name:hover {
+            .icon-pencil {
+                display: inline-block;
+            }
+        }
+        .form-search {
+            button {
+                display: inline-block;
+            }
+        }
+    }
+}
+@include respond-to(phone) {
+    .aui .skype-portlet {
+        .form-search {
+            input {
+                width: 90%;
+                padding: 5px 5%;
+                margin: 0;
             }
         }
     }

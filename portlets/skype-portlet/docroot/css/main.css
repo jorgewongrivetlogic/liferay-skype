@@ -85,11 +85,8 @@ div.groups-list {
         margin: 0;
     }
     ul > li {
-        .group-options.show {
-            display: inline-block;
-        }
         .group-options {
-            display: none;
+            display: inline-block;
         }
     }
 }
@@ -146,14 +143,36 @@ ul.groups > li {
 	display: none;
 }
 
+.skype-portlet .edit-group input {
+    height: 43px;
+    font-size: 24.5px;
+}
+
 div.skype-modal * {
 	z-index: 300 !important;
 }
 
+.skype-portlet {
+    .form-search {
+        button {
+            display: none;
+        }
+    }
+}
 
 #edit-options {
     display: none;
 }
+
 h3.skype-group-name {
     display: inline-block;
+    .icon-pencil {
+        display: none;
+    }
+    
+}
+h3.skype-group-name:hover {
+    .icon-pencil {
+        display: inline-block;
+    }
 }

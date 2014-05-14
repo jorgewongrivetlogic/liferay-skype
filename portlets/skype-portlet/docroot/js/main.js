@@ -20,6 +20,7 @@ AUI.add('skype-portlet', function (Y, NAME) {
         html: "",
         dataTable: {},
         data: {},
+        searchKeyword: '',
         currentPage: 1,
         total: 0,
         nameAsc: false,
@@ -28,6 +29,7 @@ AUI.add('skype-portlet', function (Y, NAME) {
         isOrderedLastName: false,
         itemsOnPaginator: 15,
         groupsPaginator: null,
+        usersPaginator: null,
 
 /** -------------------------------- AJAX CALLS ---------------------------------/*
 /**
@@ -66,7 +68,9 @@ AUI.add('skype-portlet', function (Y, NAME) {
                     delta: me.get('usersPerPage'),
                     curPage: me.currentPage
                 };
-
+            if (me.searchKeyword != '') {
+                rawData.search = me.searchKeyword;
+            }
             // Verify whether the user has ordered the columns so that they keep
             // appearing with that order
             if (me.isOrderedName) {
@@ -97,7 +101,7 @@ AUI.add('skype-portlet', function (Y, NAME) {
                     }
                 }
                 me.renderTable(d);
-                me.renderPagination();
+                me.renderPagination(d.total);
             });
         },
 
@@ -197,7 +201,7 @@ AUI.add('skype-portlet', function (Y, NAME) {
             });
         },
 
-        addGroup: function (groupName, groupList) {
+        addGroup: function (groupName, groupList, cb) {
             var me = this,
                 data = Liferay.Util.ns(
                 this.get('portletNamespace'), {
@@ -210,10 +214,11 @@ AUI.add('skype-portlet', function (Y, NAME) {
                 data: data
             }, function (d) {
                 me.getGroups();
+                var exec = (typeof cb != 'undefined') ? cb(d) : null;
             });
         },
         
-        updateGroupName: function(groupId, groupName) {
+        updateGroupName: function(groupId, groupName, cb) {
             var me = this,
             data = Liferay.Util.ns(
             this.get('portletNamespace'), {
@@ -226,10 +231,11 @@ AUI.add('skype-portlet', function (Y, NAME) {
                 data: data
             }, function (d) {
                 me.getGroups();
+                var exec = (typeof cb != 'undefined') ? cb(d) : null;
             });
         },
         
-        updateGroup: function (groupId, groupName, groupList) {
+        updateGroup: function (groupId, groupName, groupList, cb) {
             var me = this,
                 data = Liferay.Util.ns(
                 this.get('portletNamespace'), {
@@ -243,6 +249,7 @@ AUI.add('skype-portlet', function (Y, NAME) {
                 data: data
             }, function (d) {
                 me.getGroups();
+                var exec = (typeof cb != 'undefined') ? cb(d) : null;
             });
         },
 
@@ -278,59 +285,40 @@ AUI.add('skype-portlet', function (Y, NAME) {
 /** -------------------------------- RENDERING FUNCTIONS ---------------------------------/*
 
         /**
-         * Renders the pagination using Handlebars' templating. 
+         * Renders the pagination. 
          * 
          */
         renderPagination: function (total) {
-            var source = Y.one('#' + this.pns + 'pagination-template').getHTML(),
-                template = Y.Handlebars.compile(source),
-                items = [],
-                // Sets the number of items the paginator will have on the left
-                itemsOnLeft = Math.floor(this.itemsOnPaginator / 2);
-            currentPage = this.currentPage,
-            // Sets the tentative first number on pagination
-            first = currentPage - itemsOnLeft,
-            // Sets the tentative last number on pagination
-            maxPage = currentPage + itemsOnLeft,
-            // Gets the maximum possible number for a page
-            maxPages = Math.ceil(this.total / this.get('usersPerPage'));
-
-            // If the first page is negative, add that difference to the last page
-            if (first < 1) {
-                maxPage += (--first * -1);
-                first = 1;
+            var me = this;
+            if (!this.usersPaginator) {
+                this.usersPaginator = new Y.Pagination({
+                    boundingBox: Y.one('#' + this.pns + 'table-pagination'),
+                    total: Math.floor((total + this.get('usersPerPage') - 1) / this.get('usersPerPage')),
+                    page: 1,
+                    after: {
+                        changeRequest: function(event) {
+                            me.currentPage = event.state.page;
+                            me.listUsersCall();
+                            
+                            var paginationItemsDisplayed = 0;
+                            var paginationItems = this.get('boundingBox').all('li a');
+                            paginationItems.removeClass('hidden');
+                            paginationItems.each(function(node) {
+                                if (Y.Lang.isNumber(parseInt(node.get('text')))) {
+                                    var itemNumber = parseInt(node.get('text'));
+                                    if (Math.abs(itemNumber - me.currentPage) > me.get('usersPerPage')) {
+                                        node.addClass('hidden');
+                                    } 
+                                };
+                            });
+                            
+                        }
+                    }
+                }).render();
+            } else {
+                this.usersPaginator.set('total', Math.floor((total + me.get('usersPerPage') - 1) / me.get('usersPerPage')));
+                this.usersPaginator.set('page', me.currentPage);
             }
-
-            // If the last page is bigger than the allowed maximum, add the difference
-            // to the "previous" list
-            if (maxPage >= (maxPages + 1)) {
-                first = first - (maxPage - maxPages);
-                maxPage = maxPages;
-            }
-
-            if (first < 1) {
-                first = 1;
-            }
-
-            for (var i = first; i <= maxPage; i++) {
-                var obj = {
-                    number: i
-                };
-
-                if (i == this.currentPage) {
-                    obj.isCurrent = true;
-                }
-
-                items.push(obj);
-
-            }
-            var html = template({
-                items: items
-            });
-
-            Y.one('#' + this.pns + 'table-pagination').get("childNodes").remove();
-            Y.one('#' + this.pns + 'table-pagination').append(html);
-
         },
 
         /**
@@ -436,6 +424,8 @@ AUI.add('skype-portlet', function (Y, NAME) {
                     skypeid: e.currentTarget.get("title"),
                     "user-id": e.currentTarget.getAttribute("user")
                 });
+                me.get('container').one('.group-save-btn').removeClass('disabled');
+                Y.one('#' + me.pns + 'group-name').removeClass('hidden');
             }, ".icon-skype");
         },
 
@@ -459,6 +449,8 @@ AUI.add('skype-portlet', function (Y, NAME) {
                     skypeid: e.currentTarget.get("title"),
                     "user-id": e.currentTarget.getAttribute("user")
                 });
+                me.get('container').one('.group-save-btn').removeClass('disabled');
+                Y.one('#' + me.pns + 'group-name').removeClass('hidden');
             }, ".icon-phone");
         },
 
@@ -466,63 +458,16 @@ AUI.add('skype-portlet', function (Y, NAME) {
          *   Adds listener which removes element from the list when the handler is clicked
          */
         setHandlerListener: function () {
+            var instance = this;
             Y.one(".skype-users-to-call").delegate('click', function () {
                 this.ancestor('li').remove();
+                var users = instance.getUsers();
+                if (users.length > 0) {
+                    instance.get('container').one('.group-save-btn').removeClass('disabled');
+                } else {
+                    instance.get('container').one('.group-save-btn').addClass('disabled');
+                }
             }, '.handle');
-        },
-
-        /**
-         *   Adds listener for all numbers on pagination. Sets current page to
-         *   the number clicked, and calls the funtions which dies ther Ajax request
-         */
-        paginationListener: function () {
-            var me = this;
-            Y.one('#' + this.pns + 'table-pagination').delegate('click', function (e) {
-                e.preventDefault();
-                me.currentPage = parseInt(e.currentTarget.get("text"));
-                me.listUsersCall();
-            }, '.pagination-number');
-        },
-
-        setPreviousListener: function () {
-            var me = this;
-            Y.one('#' + this.pns + 'table-pagination').delegate("click", function (e) {
-                e.preventDefault();
-                if (me.currentPage > 1) {
-                    me.currentPage -= 1;
-                }
-                me.listUsersCall();
-            }, '#' + this.pns + 'pagination-previous');
-        },
-
-        setNextListener: function () {
-            var me = this;
-            Y.one('#' + this.pns + 'table-pagination').delegate("click", function (e) {
-                e.preventDefault();
-                var last = Math.ceil(me.total / me.get('usersPerPage'));
-                if (me.currentPage < last) {
-                    me.currentPage += 1;
-                }
-                me.listUsersCall();
-            }, '#' + this.pns + 'pagination-nexts');
-        },
-
-        setFirstListener: function () {
-            var me = this;
-            Y.one('#' + this.pns + 'table-pagination').delegate("click", function (e) {
-                e.preventDefault();
-                me.currentPage = 1;
-                me.listUsersCall();
-            }, '#' + this.pns + 'pagination-first');
-        },
-
-        setLastListener: function () {
-            var me = this;
-            Y.one('#' + this.pns + 'table-pagination').delegate("click", function (e) {
-                e.preventDefault();
-                me.currentPage = Math.ceil(me.total / me.get('usersPerPage'));
-                me.listUsersCall();
-            }, '#' + this.pns + 'pagination-last');
         },
 
         sortNameListener: function () {
@@ -602,6 +547,10 @@ AUI.add('skype-portlet', function (Y, NAME) {
             },
             /* Opens skype with the given uri */
             openSkypeURI: function(skypeClientFrameId, uri) {
+                if (Skype.isChrome && Skype.httpProtocol == 'https:') {
+                    window.location = uri;
+                    return;
+                }
                 if (Skype.isIE10 || Skype.isIE9 || Skype.isIE8) {
                     Skype.trySkypeUri_IE9_IE8(uri, '', '');
                 } else if ((Skype.isIOS6 || Skype.isIOS5 || Skype.isIOS4) && Skype.isSafari) {
@@ -614,20 +563,64 @@ AUI.add('skype-portlet', function (Y, NAME) {
             }
         },
         
+        newGroupListener: function () {
+            var me = this;
+            Y.one('#' + this.pns + 'skype-new-group').on("click", function () {
+                var groupNameNode = Y.one('#' + me.pns + 'group-name');
+                if (!groupNameNode.hasClass('hidden')) {
+                    groupNameNode.one('span').set('text', Liferay.Language.get('label.unnamed.group'));
+                    groupNameNode.one('span').removeAttribute('group-id');
+                    groupNameNode.addClass('hidden');
+                    Y.one('#' + me.pns + 'users').get("childNodes").remove();
+                }
+            });
+        },
+        
+        displayGroupsModificationErrors: function(errors) {
+            if (errors == 'not.unique.group') {
+                this.showMessage(Liferay.Language.get('error'), Liferay.Language.get('not.unique.group'));
+            } else {
+                this.showMessage(Liferay.Language.get('error'), Liferay.Language.get('error'));
+            }
+        },
+        
         saveGroupListener: function () {
             var me = this,
                 id = Y.one('#' + this.pns + 'group-name span').getAttribute("group-id");
             Y.one('#' + this.pns + 'skype-save').on("click", function () {
+                if (me.get('container').one('.group-save-btn').hasClass('disabled')) {
+                    return;
+                }
                 var users = [],
                     groupName = Y.one('#' + me.pns + 'group-name span').get("text");
                 users = me.getUsers();
                 id = Y.one('#' + me.pns + 'group-name span').getAttribute("group-id");
                 if (users.length > 0) {
+                    me.get('container').one('.group-save-btn').addClass('disabled');
                     if (id == "") {
-                        me.addGroup(groupName, users);
+                        me.addGroup(groupName, users, function(response) {
+                            if (!response.success) {
+                                me.displayGroupsModificationErrors(response.errors);
+                                me.get('container').one('.group-save-btn').removeClass('disabled');
+                            } else {
+                                Y.one('#' + me.pns + 'group-name span').setAttribute("group-id", response['skype-group-id']);
+                                me.showMessage(Liferay.Language.get('message.group.creation.title'),
+                                           Y.Lang.sub(Liferay.Language.get('message.group.creation.message'), {groupName: groupName}));
+                            }
+                            
+                            
+                        });
                     } else {
-                        me.updateGroup(id, groupName, users);
+                        me.updateGroup(id, groupName, users, function(response) {
+                            if (!response.success) {
+                                me.displayGroupsModificationErrors(response.errors);
+                            } else {
+                                me.showMessage(Liferay.Language.get('message.group.update.title'),
+                                           Y.Lang.sub(Liferay.Language.get('message.group.update.message'), {groupName: groupName}));
+                            }
+                        });
                     }
+                    
                 } else {
                     me.showMessage(Liferay.Language.get('error'), Liferay.Language.get('error.message.select.one.user.to.save'));
                 }
@@ -638,22 +631,28 @@ AUI.add('skype-portlet', function (Y, NAME) {
 
         loadGroupListener: function () {
             var me = this;
-            
             Y.one('#' + this.pns + 'skype-load').on("click", function () {
-                Y.one('#' + me.pns + 'groups-list').setStyle("display", "block");
-                Y.one('#' + me.pns + 'group-save').setStyle("display", "none");
-                me.getGroups(null, function(groups) {
-                    if (me.groupsPaginator) {
-                        me.groupsPaginator.set('total', Math.floor((groups.total + me.get('groupsPerPage') - 1) / me.get('groupsPerPage')));
-                        me.groupsPaginator.set('page', 1);
-                    }
-                });
+                if (this.hasClass('active')) {
+                    Y.one('#' + me.pns + 'groups-list').setStyle("display", "none");
+                } else {
+                    Y.one('#' + me.pns + 'groups-list').setStyle("display", "block");
+                    Y.one('#' + me.pns + 'group-save').setStyle("display", "none");
+                    me.getGroups(null, function(groups) {
+                        if (me.groupsPaginator) {
+                            me.groupsPaginator.set('total', Math.floor((groups.total + me.get('groupsPerPage') - 1) / me.get('groupsPerPage')));
+                            me.groupsPaginator.set('page', 1);
+                        }
+                    });
+                }
+                this.toggleClass('active');
             });
         },
 
         groupInfoListener: function () {
             var me = this;
             Y.one('#' + this.pns + 'groups-list').delegate("click", function (e) {
+                me.get('container').one('.group-save-btn').addClass('disabled');
+                Y.one('#' + me.pns + 'group-name').removeClass('hidden');
                 me.getGroupInfo(e.currentTarget.getAttribute("group-id"),
                 // using bind to keep the function context to "me"
                 Y.bind(me.updateGroupRender, me));
@@ -662,13 +661,6 @@ AUI.add('skype-portlet', function (Y, NAME) {
             }, ".icon-folder-open");
         },
 
-        groupLisListener: function () {
-            Y.one('#' + this.pns + 'groups-list').delegate("hover", function (e) {
-                e.currentTarget.one(".group-options").addClass('show');
-            }, function (e) {
-                e.currentTarget.one(".group-options").removeClass('show');
-            }, '#' + this.pns + 'groups > li');
-        },
 
         iconEditListener: function () {
             Y.one('#' + this.pns + 'groups-list').delegate("click", function (e) {
@@ -696,17 +688,52 @@ AUI.add('skype-portlet', function (Y, NAME) {
 
         },
 
+        searchListener: function() {
+            var me = this;
+            var searchForm = this.get('container').one('.users-container .form-search');
+            var input = searchForm.one('input[type="text"]');
+            var searchTimeout = null;
+            
+            var execSearch = function() {
+                me.currentPage = 1;
+                me.searchKeyword = input.get('value');
+                me.listUsersCall();
+            };
+            input.on('keydown', function() {
+                searchTimeout = (searchTimeout) ? clearTimeout(searchTimeout) : searchTimeout;
+                setTimeout(function() {
+                    execSearch();
+                }, 1000);
+            });
+            searchForm.one('button').on('click', function(e) {
+                e.preventDefault();
+                execSearch();
+            });
+        },
+        
         iconEditName: function () {
-            Y.one('#' + this.pns + 'group-name').delegate("click", function (e) {
-                var h3 = e.currentTarget.ancestor("h3"),
+            var me = this;
+            var editEvents = function(input) {
+                input.focus();
+                input.once('blur', function() {
+                    if (input.get('value') != '') {
+                        me.iconSaveName();
+                    } else {
+                        editEvents(input);
+                    }
+                });
+            };
+            Y.one('#' + this.pns + 'group-name').on("click", function (e) {
+                var h3 = e.currentTarget,
                     span = h3.one("span"),
                     spanText = span.get("text"),
                     edit = h3.next().setStyle("display", "block");
                 input = edit.one('input');
 
                 input.set("value", spanText);
+                editEvents(input);
                 h3.setStyle("display", "none");
-            }, "i");
+            });
         },
 
         iconCancelName: function () {
@@ -724,46 +751,34 @@ AUI.add('skype-portlet', function (Y, NAME) {
 
         iconSaveName: function () {
             var me = this;
-            Y.one("div.skype-users-to-call").delegate("click", function (e) {
-                var h3 = Y.one('#' + me.pns + 'group-name'),
-                span = h3.one("span");
-                
-                /* if user is editing name from groups list */
-                if (e.currentTarget.hasClass('list-item')) {
-                    var groupNode = e.currentTarget.ancestor('li');
-                    var groupId = groupNode.one('.icon-folder-open').getAttribute('group-id');
-                    var groupName = groupNode.one('input[type="text"]').get('value');
-                    if (span.getAttribute("group-id") == groupId) {
-                        span.set("text", groupName);
-                    }
-                    me.updateGroupName(groupId, groupName);
+            var h3 = Y.one('#' + me.pns + 'group-name'),
+            span = h3.one("span");
+
+            var edit = h3.next().setStyle("display", "none");
+            input = edit.one('input'), id = span.getAttribute("group-id");
+
+            span.set("text", input.val());
+            h3.setStyle("display", "block");
+
+            if (id != "") {
+                var users = me.getUsers();
+                if (users.length > 0) {
+                    me.updateGroup(id, input.val(), users);
                 } else {
-                    var edit = h3.next().setStyle("display", "none");
-                    input = edit.one('input'), id = span.getAttribute("group-id");
-    
-                    span.set("text", input.val());
-                    h3.setStyle("display", "block");
-    
-                    if (id != "") {
-                        var users = me.getUsers();
-                        if (users.length > 0) {
-                            me.updateGroup(id, input.val(), users);
-                        } else {
-                            me.showMessage(Liferay.Language.get('error'), Liferay.Language.get('error.message.select.one.user.to.save'));
-                        }
-                    }
+                    me.showMessage(Liferay.Language.get('error'), Liferay.Language.get('error.message.select.one.user.to.save'));
                 }
-                
-            }, ".edit-group .save-edit-group");
+            }
+
         },
 
         iconDeleteGroup: function () {
             var me = this;
             Y.one('#' + this.pns + 'groups-list').delegate("click", function (e) {
                 var id = e.currentTarget.ancestor('.group-options').one('.icon-folder-open');
+                var name = e.currentTarget.ancestor('li').one('.group-label').get('text');
                 id = id.getAttribute("group-id");
                 if (id != "") {
-                    var confirm = window.confirm(Liferay.Language.get("message.delete.group"));
+                    var confirm = window.confirm(Y.Lang.sub(Liferay.Language.get("message.delete.group"), {groupName: name}));
                     if (confirm) {
                         me.removeGroup(id);
                     }
@@ -821,29 +836,22 @@ AUI.add('skype-portlet', function (Y, NAME) {
             this.listUsersCall();
             this.setSkypeListener();
             this.setPhoneListener();
-            this.setPreviousListener();
             this.sortNameListener();
             this.sortLastNameListener();
-            this.paginationListener();
-            this.setNextListener();
-            this.setFirstListener();
-            this.setLastListener();
             this.setHandlerListener();
             this.openSkypeListener();
             this.callSkypeListener();
             this.saveGroupListener();
-
+            this.newGroupListener();
+            this.searchListener();
             this.loadGroupListener();
             this.groupInfoListener();
 
-
-            this.groupLisListener();
             this.iconEditListener();
             this.iconSaveEditGroupListener();
             this.iconDeleteGroup();
             this.iconEditName();
             this.iconCancelName();
-            this.iconSaveName();
         }
     }, {
         ATTRS: {
