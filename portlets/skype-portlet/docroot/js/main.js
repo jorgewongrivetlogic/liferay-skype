@@ -218,7 +218,7 @@ AUI.add('skype-portlet', function (Y, NAME) {
             });
         },
         
-        updateGroupName: function(groupId, groupName) {
+        updateGroupName: function(groupId, groupName, cb) {
             var me = this,
             data = Liferay.Util.ns(
             this.get('portletNamespace'), {
@@ -231,6 +231,7 @@ AUI.add('skype-portlet', function (Y, NAME) {
                 data: data
             }, function (d) {
                 me.getGroups();
+                var exec = (typeof cb != 'undefined') ? cb(d) : null;
             });
         },
         
@@ -248,7 +249,7 @@ AUI.add('skype-portlet', function (Y, NAME) {
                 data: data
             }, function (d) {
                 me.getGroups();
-                var exec = (typeof cb != 'undefined') ? cb() : null;
+                var exec = (typeof cb != 'undefined') ? cb(d) : null;
             });
         },
 
@@ -575,6 +576,14 @@ AUI.add('skype-portlet', function (Y, NAME) {
             });
         },
         
+        displayGroupsModificationErrors: function(errors) {
+            if (errors == 'not.unique.group') {
+                this.showMessage(Liferay.Language.get('error'), Liferay.Language.get('not.unique.group'));
+            } else {
+                this.showMessage(Liferay.Language.get('error'), Liferay.Language.get('error'));
+            }
+        },
+        
         saveGroupListener: function () {
             var me = this,
                 id = Y.one('#' + this.pns + 'group-name span').getAttribute("group-id");
@@ -587,19 +596,31 @@ AUI.add('skype-portlet', function (Y, NAME) {
                 users = me.getUsers();
                 id = Y.one('#' + me.pns + 'group-name span').getAttribute("group-id");
                 if (users.length > 0) {
+                    me.get('container').one('.group-save-btn').addClass('disabled');
                     if (id == "") {
                         me.addGroup(groupName, users, function(response) {
-                            Y.one('#' + me.pns + 'group-name span').setAttribute("group-id", response['skype-group-id']);
-                            me.showMessage(Liferay.Language.get('message.group.creation.title'),
+                            if (!response.success) {
+                                me.displayGroupsModificationErrors(response.errors);
+                                me.get('container').one('.group-save-btn').removeClass('disabled');
+                            } else {
+                                Y.one('#' + me.pns + 'group-name span').setAttribute("group-id", response['skype-group-id']);
+                                me.showMessage(Liferay.Language.get('message.group.creation.title'),
                                            Y.Lang.sub(Liferay.Language.get('message.group.creation.message'), {groupName: groupName}));
+                            }
+                            
+                            
                         });
                     } else {
-                        me.updateGroup(id, groupName, users, function() {
-                            me.showMessage(Liferay.Language.get('message.group.update.title'),
+                        me.updateGroup(id, groupName, users, function(response) {
+                            if (!response.success) {
+                                me.displayGroupsModificationErrors(response.errors);
+                            } else {
+                                me.showMessage(Liferay.Language.get('message.group.update.title'),
                                            Y.Lang.sub(Liferay.Language.get('message.group.update.message'), {groupName: groupName}));
+                            }
                         });
                     }
-                    me.get('container').one('.group-save-btn').addClass('disabled');
+                    
                 } else {
                     me.showMessage(Liferay.Language.get('error'), Liferay.Language.get('error.message.select.one.user.to.save'));
                 }
