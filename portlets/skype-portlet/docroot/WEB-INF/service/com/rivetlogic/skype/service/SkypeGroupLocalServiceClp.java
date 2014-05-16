@@ -132,9 +132,15 @@ public class SkypeGroupLocalServiceClp implements SkypeGroupLocalService {
 				"com.rivetlogic.skype.model.SkypeGroup"
 			};
 
-		_methodName22 = "findByByUserIdAndGroupName";
+		_methodName22 = "findByUserIdAndGroupName";
 
 		_methodParameterTypes22 = new String[] {
+				"java.lang.Long", "java.lang.String"
+			};
+
+		_methodName23 = "countByUserIdAndGroupName";
+
+		_methodParameterTypes23 = new String[] {
 				"java.lang.Long", "java.lang.String"
 			};
 	}
@@ -793,7 +799,7 @@ public class SkypeGroupLocalServiceClp implements SkypeGroupLocalService {
 	}
 
 	@Override
-	public com.rivetlogic.skype.model.SkypeGroup findByByUserIdAndGroupName(
+	public com.rivetlogic.skype.model.SkypeGroup findByUserIdAndGroupName(
 		java.lang.Long userId, java.lang.String groupName) {
 		Object returnObj = null;
 
@@ -819,6 +825,35 @@ public class SkypeGroupLocalServiceClp implements SkypeGroupLocalService {
 		}
 
 		return (com.rivetlogic.skype.model.SkypeGroup)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public int countByUserIdAndGroupName(java.lang.Long userId,
+		java.lang.String groupName) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName23,
+					_methodParameterTypes23,
+					new Object[] {
+						ClpSerializer.translateInput(userId),
+						
+					ClpSerializer.translateInput(groupName)
+					});
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return ((Integer)returnObj).intValue();
 	}
 
 	private InvokableLocalService _invokableLocalService;
@@ -866,4 +901,6 @@ public class SkypeGroupLocalServiceClp implements SkypeGroupLocalService {
 	private String[] _methodParameterTypes21;
 	private String _methodName22;
 	private String[] _methodParameterTypes22;
+	private String _methodName23;
+	private String[] _methodParameterTypes23;
 }

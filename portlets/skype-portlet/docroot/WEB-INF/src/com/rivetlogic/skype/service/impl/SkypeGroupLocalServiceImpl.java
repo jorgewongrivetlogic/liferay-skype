@@ -55,11 +55,11 @@ public class SkypeGroupLocalServiceImpl extends SkypeGroupLocalServiceBaseImpl {
 	private static final Log LOG = LogFactoryUtil.getLog(SkypeGroupLocalServiceImpl.class);
 	
 	public List<SkypeGroup> getSkypeGroupByUserId(Long userId, int start, int end, OrderByComparator obc) throws SystemException{
-		return skypeGroupPersistence.findByByUserId(userId, start, end, obc);
+		return skypeGroupPersistence.findByUserId(userId, start, end, obc);
 	}
 	
 	public int getSkypeGroupByUserIdCount(Long userId) throws SystemException{
-		return skypeGroupPersistence.countByByUserId(userId);
+		return skypeGroupPersistence.countByUserId(userId);
 	}
 	
 	public SkypeGroup createSkypeGroup(SkypeGroup skypeGroup) throws SystemException, PortalException{
@@ -84,14 +84,25 @@ public class SkypeGroupLocalServiceImpl extends SkypeGroupLocalServiceBaseImpl {
 		return skypeGroup;
 	}
 	
-	public SkypeGroup findByByUserIdAndGroupName(Long userId, String groupName){
+	public SkypeGroup findByUserIdAndGroupName(Long userId, String groupName){
 		SkypeGroup skypeGroup = null;
 		try{
-			skypeGroup = skypeGroupPersistence.findByByUserIdAndGroupName(userId, groupName);
+			skypeGroup = skypeGroupPersistence.findByUserIdAndGroupName(userId, groupName);
 		}catch (Exception e) {
-			LOG.warn(e);
+			
 		}
 		return skypeGroup;
+	}
+	
+	public int countByUserIdAndGroupName(Long userId, String groupName){
+		int count = 0;
+		try {
+			count = skypeGroupPersistence.countByUserIdAndGroupName(userId, groupName);
+		} catch (SystemException e) {
+			count = -1;
+			LOG.error(e);
+		}
+		return count;
 	}
 	
 	private Date getTodayDate(){

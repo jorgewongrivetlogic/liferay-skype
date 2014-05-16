@@ -82,5 +82,6 @@ public class Constants {
 	public static String EMPTY_GROUP_NAME = "empty.group.name";
 	public static String EMPTY_CONTACTS = "empty.contacts";
 	public static String NOT_UNIQUE_GROUP = "not.unique.group";
+	public static String UNEXPECTED_ERROR = "unexpected.error";
 	
 }

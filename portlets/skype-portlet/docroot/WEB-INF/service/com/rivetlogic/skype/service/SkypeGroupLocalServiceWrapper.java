@@ -311,9 +311,16 @@ public class SkypeGroupLocalServiceWrapper implements SkypeGroupLocalService,
 	}
 
 	@Override
-	public com.rivetlogic.skype.model.SkypeGroup findByByUserIdAndGroupName(
+	public com.rivetlogic.skype.model.SkypeGroup findByUserIdAndGroupName(
 		java.lang.Long userId, java.lang.String groupName) {
-		return _skypeGroupLocalService.findByByUserIdAndGroupName(userId,
+		return _skypeGroupLocalService.findByUserIdAndGroupName(userId,
+			groupName);
+	}
+
+	@Override
+	public int countByUserIdAndGroupName(java.lang.Long userId,
+		java.lang.String groupName) {
+		return _skypeGroupLocalService.countByUserIdAndGroupName(userId,
 			groupName);
 	}
 
