@@ -17,14 +17,14 @@
 
 package com.rivetlogic.skype.portlet;
 
+import static com.rivetlogic.skype.util.Constants.EMPTY_CONTACTS;
+import static com.rivetlogic.skype.util.Constants.EMPTY_GROUP_NAME;
+import static com.rivetlogic.skype.util.Constants.NOT_UNIQUE_GROUP;
+import static com.rivetlogic.skype.util.Constants.UNEXPECTED_ERROR;
+
 import com.liferay.portal.kernel.util.StringPool;
 import com.rivetlogic.skype.model.SkypeGroup;
 import com.rivetlogic.skype.service.SkypeGroupLocalServiceUtil;
-
-import static com.rivetlogic.skype.util.Constants.EMPTY_GROUP_NAME;
-import static com.rivetlogic.skype.util.Constants.EMPTY_CONTACTS;
-import static com.rivetlogic.skype.util.Constants.DEFAULT_ELEMENT_ID;
-import static com.rivetlogic.skype.util.Constants.NOT_UNIQUE_GROUP;
 
 import java.util.List;
 
@@ -34,7 +34,10 @@ import java.util.List;
  */
 public class SkypePortletValidator {
 
-	public static boolean validateSkypeGroup(SkypeGroup skypeGroup, List<String> errors){
+	private static int MINIMUM_COUNT = 1;
+	private static int INVALID_COUNT = -1;
+	
+	private static void validateCommonFields(SkypeGroup skypeGroup, List<String> errors){
 		
 		if(StringPool.BLANK.equals(skypeGroup.getGroupName())){
 			errors.add(EMPTY_GROUP_NAME);
@@ -42,20 +45,33 @@ public class SkypePortletValidator {
 		if(StringPool.BLANK.equals(skypeGroup.getSkypeContacts())){
 			errors.add(EMPTY_CONTACTS);
 		}
+	}
+	
+	public static boolean validateCreateGroup(SkypeGroup skypeGroup, List<String> errors){
+		validateCommonFields(skypeGroup, errors);
+		int count = SkypeGroupLocalServiceUtil.countByUserIdAndGroupName(skypeGroup.getUserId(), skypeGroup.getGroupName());
 		
-		checkUniqueName(skypeGroup, errors);
+		if(count == MINIMUM_COUNT){
+			errors.add(NOT_UNIQUE_GROUP);
+		} else if(count == INVALID_COUNT){
+			errors.add(UNEXPECTED_ERROR);
+		}
+		
 		return errors.isEmpty();
 	}
 	
-	public static void checkUniqueName(SkypeGroup skypeGroup, List<String> errors){
-		//exists, so I have to check 
+	public static boolean validateUpdateGroup(SkypeGroup skypeGroup, List<String> errors){
+		validateCommonFields(skypeGroup, errors);
+		int count = SkypeGroupLocalServiceUtil.countByUserIdAndGroupName(skypeGroup.getUserId(), skypeGroup.getGroupName());
 		
-		SkypeGroup skypeGroupFound = SkypeGroupLocalServiceUtil.
-				findByByUserIdAndGroupName(skypeGroup.getUserId(), skypeGroup.getGroupName());
-		if(skypeGroupFound != null){
-			if(skypeGroupFound.getSkypeGroupId() != skypeGroup.getSkypeGroupId()){
+		if(count == MINIMUM_COUNT){
+			SkypeGroup groupFound = SkypeGroupLocalServiceUtil.findByUserIdAndGroupName(skypeGroup.getUserId(), skypeGroup.getGroupName());
+			if(groupFound.getSkypeGroupId() != skypeGroup.getSkypeGroupId()){
 				errors.add(NOT_UNIQUE_GROUP);
 			}
+		}else if(count == INVALID_COUNT){
+			errors.add(UNEXPECTED_ERROR);
 		}
+		return errors.isEmpty();
 	}
 }

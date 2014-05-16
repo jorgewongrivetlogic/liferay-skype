@@ -148,7 +148,7 @@ public class SkypePortlet extends MVCPortlet {
 		try {	
 			List<String> errors = new ArrayList<String>();
 			SkypeGroup sg = skypeGroupFromRequest(request);
-			if(SkypePortletValidator.validateSkypeGroup(sg, errors)){
+			if(SkypePortletValidator.validateCreateGroup(sg, errors)){
 				SkypeGroupLocalServiceUtil.createSkypeGroup(sg);
 				jsonResponse.put(SKYPE_GROUP_ID, sg.getSkypeGroupId());
 				jsonResponse.put(CMD_SUCCESS, true);
@@ -177,7 +177,8 @@ public class SkypePortlet extends MVCPortlet {
 				JSONArray obj = contactsFromRequest(request);
 				skypeGroup.setGroupName(ParamUtil.getString(request, SKYPE_GROUP_NAME));
 				skypeGroup.setSkypeContacts(obj.toString());
-				if(SkypePortletValidator.validateSkypeGroup(skypeGroup, errors)){
+				
+				if(SkypePortletValidator.validateUpdateGroup(skypeGroup, errors)){
 					SkypeGroupLocalServiceUtil.updateSkypeGroup(skypeGroup);
 					jsonResponse.put(CMD_SUCCESS, true);
 				}else{
@@ -206,7 +207,7 @@ public class SkypePortlet extends MVCPortlet {
 				List<String> errors = new ArrayList<String>();
 				skypeGroup = SkypeGroupLocalServiceUtil.getSkypeGroup(skypeGroupId);
 				skypeGroup.setGroupName(ParamUtil.getString(request, SKYPE_GROUP_NAME));
-				if(SkypePortletValidator.validateSkypeGroup(skypeGroup, errors)){
+				if(SkypePortletValidator.validateUpdateGroup(skypeGroup, errors)){
 					SkypeGroupLocalServiceUtil.updateSkypeGroup(skypeGroup);
 					jsonResponse.put(CMD_SUCCESS, true);
 				}else{

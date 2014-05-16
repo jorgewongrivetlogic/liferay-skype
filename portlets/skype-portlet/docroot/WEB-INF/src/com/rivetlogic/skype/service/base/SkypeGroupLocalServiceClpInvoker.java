@@ -137,9 +137,15 @@ public class SkypeGroupLocalServiceClpInvoker {
 				"com.rivetlogic.skype.model.SkypeGroup"
 			};
 
-		_methodName42 = "findByByUserIdAndGroupName";
+		_methodName42 = "findByUserIdAndGroupName";
 
 		_methodParameterTypes42 = new String[] {
+				"java.lang.Long", "java.lang.String"
+			};
+
+		_methodName43 = "countByUserIdAndGroupName";
+
+		_methodParameterTypes43 = new String[] {
 				"java.lang.Long", "java.lang.String"
 			};
 	}
@@ -270,7 +276,13 @@ public class SkypeGroupLocalServiceClpInvoker {
 
 		if (_methodName42.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes42, parameterTypes)) {
-			return SkypeGroupLocalServiceUtil.findByByUserIdAndGroupName((java.lang.Long)arguments[0],
+			return SkypeGroupLocalServiceUtil.findByUserIdAndGroupName((java.lang.Long)arguments[0],
+				(java.lang.String)arguments[1]);
+		}
+
+		if (_methodName43.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes43, parameterTypes)) {
+			return SkypeGroupLocalServiceUtil.countByUserIdAndGroupName((java.lang.Long)arguments[0],
 				(java.lang.String)arguments[1]);
 		}
 
@@ -323,4 +335,6 @@ public class SkypeGroupLocalServiceClpInvoker {
 	private String[] _methodParameterTypes41;
 	private String _methodName42;
 	private String[] _methodParameterTypes42;
+	private String _methodName43;
+	private String[] _methodParameterTypes43;
 }

@@ -117,9 +117,9 @@ public class SkypeGroupUtil {
 	* @return the matching skype groups
 	* @throws SystemException if a system exception occurred
 	*/
-	public static java.util.List<com.rivetlogic.skype.model.SkypeGroup> findByByUserId(
+	public static java.util.List<com.rivetlogic.skype.model.SkypeGroup> findByUserId(
 		long userId) throws com.liferay.portal.kernel.exception.SystemException {
-		return getPersistence().findByByUserId(userId);
+		return getPersistence().findByUserId(userId);
 	}
 
 	/**
@@ -135,10 +135,10 @@ public class SkypeGroupUtil {
 	* @return the range of matching skype groups
 	* @throws SystemException if a system exception occurred
 	*/
-	public static java.util.List<com.rivetlogic.skype.model.SkypeGroup> findByByUserId(
+	public static java.util.List<com.rivetlogic.skype.model.SkypeGroup> findByUserId(
 		long userId, int start, int end)
 		throws com.liferay.portal.kernel.exception.SystemException {
-		return getPersistence().findByByUserId(userId, start, end);
+		return getPersistence().findByUserId(userId, start, end);
 	}
 
 	/**
@@ -155,12 +155,12 @@ public class SkypeGroupUtil {
 	* @return the ordered range of matching skype groups
 	* @throws SystemException if a system exception occurred
 	*/
-	public static java.util.List<com.rivetlogic.skype.model.SkypeGroup> findByByUserId(
+	public static java.util.List<com.rivetlogic.skype.model.SkypeGroup> findByUserId(
 		long userId, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return getPersistence()
-				   .findByByUserId(userId, start, end, orderByComparator);
+				   .findByUserId(userId, start, end, orderByComparator);
 	}
 
 	/**
@@ -172,12 +172,12 @@ public class SkypeGroupUtil {
 	* @throws com.rivetlogic.skype.NoSuchSkypeGroupException if a matching skype group could not be found
 	* @throws SystemException if a system exception occurred
 	*/
-	public static com.rivetlogic.skype.model.SkypeGroup findByByUserId_First(
+	public static com.rivetlogic.skype.model.SkypeGroup findByUserId_First(
 		long userId,
 		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
 		throws com.liferay.portal.kernel.exception.SystemException,
 			com.rivetlogic.skype.NoSuchSkypeGroupException {
-		return getPersistence().findByByUserId_First(userId, orderByComparator);
+		return getPersistence().findByUserId_First(userId, orderByComparator);
 	}
 
 	/**
@@ -188,11 +188,11 @@ public class SkypeGroupUtil {
 	* @return the first matching skype group, or <code>null</code> if a matching skype group could not be found
 	* @throws SystemException if a system exception occurred
 	*/
-	public static com.rivetlogic.skype.model.SkypeGroup fetchByByUserId_First(
+	public static com.rivetlogic.skype.model.SkypeGroup fetchByUserId_First(
 		long userId,
 		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
 		throws com.liferay.portal.kernel.exception.SystemException {
-		return getPersistence().fetchByByUserId_First(userId, orderByComparator);
+		return getPersistence().fetchByUserId_First(userId, orderByComparator);
 	}
 
 	/**
@@ -204,12 +204,12 @@ public class SkypeGroupUtil {
 	* @throws com.rivetlogic.skype.NoSuchSkypeGroupException if a matching skype group could not be found
 	* @throws SystemException if a system exception occurred
 	*/
-	public static com.rivetlogic.skype.model.SkypeGroup findByByUserId_Last(
+	public static com.rivetlogic.skype.model.SkypeGroup findByUserId_Last(
 		long userId,
 		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
 		throws com.liferay.portal.kernel.exception.SystemException,
 			com.rivetlogic.skype.NoSuchSkypeGroupException {
-		return getPersistence().findByByUserId_Last(userId, orderByComparator);
+		return getPersistence().findByUserId_Last(userId, orderByComparator);
 	}
 
 	/**
@@ -220,11 +220,11 @@ public class SkypeGroupUtil {
 	* @return the last matching skype group, or <code>null</code> if a matching skype group could not be found
 	* @throws SystemException if a system exception occurred
 	*/
-	public static com.rivetlogic.skype.model.SkypeGroup fetchByByUserId_Last(
+	public static com.rivetlogic.skype.model.SkypeGroup fetchByUserId_Last(
 		long userId,
 		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
 		throws com.liferay.portal.kernel.exception.SystemException {
-		return getPersistence().fetchByByUserId_Last(userId, orderByComparator);
+		return getPersistence().fetchByUserId_Last(userId, orderByComparator);
 	}
 
 	/**
@@ -237,13 +237,13 @@ public class SkypeGroupUtil {
 	* @throws com.rivetlogic.skype.NoSuchSkypeGroupException if a skype group with the primary key could not be found
 	* @throws SystemException if a system exception occurred
 	*/
-	public static com.rivetlogic.skype.model.SkypeGroup[] findByByUserId_PrevAndNext(
+	public static com.rivetlogic.skype.model.SkypeGroup[] findByUserId_PrevAndNext(
 		long skypeGroupId, long userId,
 		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
 		throws com.liferay.portal.kernel.exception.SystemException,
 			com.rivetlogic.skype.NoSuchSkypeGroupException {
 		return getPersistence()
-				   .findByByUserId_PrevAndNext(skypeGroupId, userId,
+				   .findByUserId_PrevAndNext(skypeGroupId, userId,
 			orderByComparator);
 	}
 
@@ -253,9 +253,9 @@ public class SkypeGroupUtil {
 	* @param userId the user ID
 	* @throws SystemException if a system exception occurred
 	*/
-	public static void removeByByUserId(long userId)
+	public static void removeByUserId(long userId)
 		throws com.liferay.portal.kernel.exception.SystemException {
-		getPersistence().removeByByUserId(userId);
+		getPersistence().removeByUserId(userId);
 	}
 
 	/**
@@ -265,9 +265,9 @@ public class SkypeGroupUtil {
 	* @return the number of matching skype groups
 	* @throws SystemException if a system exception occurred
 	*/
-	public static int countByByUserId(long userId)
+	public static int countByUserId(long userId)
 		throws com.liferay.portal.kernel.exception.SystemException {
-		return getPersistence().countByByUserId(userId);
+		return getPersistence().countByUserId(userId);
 	}
 
 	/**
@@ -279,11 +279,11 @@ public class SkypeGroupUtil {
 	* @throws com.rivetlogic.skype.NoSuchSkypeGroupException if a matching skype group could not be found
 	* @throws SystemException if a system exception occurred
 	*/
-	public static com.rivetlogic.skype.model.SkypeGroup findByByUserIdAndGroupName(
+	public static com.rivetlogic.skype.model.SkypeGroup findByUserIdAndGroupName(
 		long userId, java.lang.String groupName)
 		throws com.liferay.portal.kernel.exception.SystemException,
 			com.rivetlogic.skype.NoSuchSkypeGroupException {
-		return getPersistence().findByByUserIdAndGroupName(userId, groupName);
+		return getPersistence().findByUserIdAndGroupName(userId, groupName);
 	}
 
 	/**
@@ -294,10 +294,10 @@ public class SkypeGroupUtil {
 	* @return the matching skype group, or <code>null</code> if a matching skype group could not be found
 	* @throws SystemException if a system exception occurred
 	*/
-	public static com.rivetlogic.skype.model.SkypeGroup fetchByByUserIdAndGroupName(
+	public static com.rivetlogic.skype.model.SkypeGroup fetchByUserIdAndGroupName(
 		long userId, java.lang.String groupName)
 		throws com.liferay.portal.kernel.exception.SystemException {
-		return getPersistence().fetchByByUserIdAndGroupName(userId, groupName);
+		return getPersistence().fetchByUserIdAndGroupName(userId, groupName);
 	}
 
 	/**
@@ -309,11 +309,11 @@ public class SkypeGroupUtil {
 	* @return the matching skype group, or <code>null</code> if a matching skype group could not be found
 	* @throws SystemException if a system exception occurred
 	*/
-	public static com.rivetlogic.skype.model.SkypeGroup fetchByByUserIdAndGroupName(
+	public static com.rivetlogic.skype.model.SkypeGroup fetchByUserIdAndGroupName(
 		long userId, java.lang.String groupName, boolean retrieveFromCache)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return getPersistence()
-				   .fetchByByUserIdAndGroupName(userId, groupName,
+				   .fetchByUserIdAndGroupName(userId, groupName,
 			retrieveFromCache);
 	}
 
@@ -325,11 +325,11 @@ public class SkypeGroupUtil {
 	* @return the skype group that was removed
 	* @throws SystemException if a system exception occurred
 	*/
-	public static com.rivetlogic.skype.model.SkypeGroup removeByByUserIdAndGroupName(
+	public static com.rivetlogic.skype.model.SkypeGroup removeByUserIdAndGroupName(
 		long userId, java.lang.String groupName)
 		throws com.liferay.portal.kernel.exception.SystemException,
 			com.rivetlogic.skype.NoSuchSkypeGroupException {
-		return getPersistence().removeByByUserIdAndGroupName(userId, groupName);
+		return getPersistence().removeByUserIdAndGroupName(userId, groupName);
 	}
 
 	/**
@@ -340,10 +340,10 @@ public class SkypeGroupUtil {
 	* @return the number of matching skype groups
 	* @throws SystemException if a system exception occurred
 	*/
-	public static int countByByUserIdAndGroupName(long userId,
+	public static int countByUserIdAndGroupName(long userId,
 		java.lang.String groupName)
 		throws com.liferay.portal.kernel.exception.SystemException {
-		return getPersistence().countByByUserIdAndGroupName(userId, groupName);
+		return getPersistence().countByUserIdAndGroupName(userId, groupName);
 	}
 
 	/**
