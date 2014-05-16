@@ -176,3 +176,11 @@ h3.skype-group-name:hover {
         display: inline-block;
     }
 }
+
+.skype-portlet table .center {
+    text-align: center;
+}
+
+.skype-portlet table .skype-btn-cell {
+    width: 105px;
+}
