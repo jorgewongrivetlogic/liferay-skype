@@ -28,9 +28,11 @@
 
     <script id="${pns}item-template" type="text/x-handlebars-template">
         <li class="{{type}}-chat" skypeid="{{skypeid}}" user="{{user-id}}">
-            {{first-name}} {{last-name}}
-            <span class="icon-{{type}}"></span>
-            <span class="handle"></span>
+            <div>
+                {{first-name}} {{last-name}}
+                <span class="icon-{{type}}"></span>
+                <span class="handle"></span>
+            </div>
         </li>
     </script>
 
