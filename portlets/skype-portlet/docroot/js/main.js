@@ -729,13 +729,19 @@ AUI.add('skype-portlet', function (Y, NAME) {
             var me = this;
             var editEvents = function(input) {
                 input.focus();
-                input.once('blur', function() {
+                var execSave = function() {
                     if (input.get('value') != '') {
                         me.iconSaveName();
                     } else {
                         editEvents(input);
                     }
+                }
+                input.once('blur', function() {
+                    execSave();
                 });
+                input.once('key', function() {
+                    execSave();
+                }, 'enter');
             };
             Y.one('#' + this.pns + 'group-name').on("click", function (e) {
                 var h3 = e.currentTarget,
