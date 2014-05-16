@@ -28,9 +28,11 @@
 
     <script id="${pns}item-template" type="text/x-handlebars-template">
         <li class="{{type}}-chat" skypeid="{{skypeid}}" user="{{user-id}}">
-            {{first-name}} {{last-name}}
-            <span class="icon-{{type}}"></span>
-            <span class="handle"></span>
+            <div>
+                {{first-name}} {{last-name}}
+                <span class="icon-{{type}}"></span>
+                <span class="handle"></span>
+            </div>
         </li>
     </script>
 
@@ -90,12 +92,12 @@
                 <tr>
                     <td>{{first-name}}</td>
                     <td>{{last-name}}</td>
-                    <td>
+                    <td class="center skype-btn-cell">
                         {{#if skype-sn}}
                             <span class="icon-skype" title="{{skype-sn}}" user="{{user-id}}"></span>
                         {{/if}}
                     </td>
-                    <td>
+                    <td class="center skype-btn-cell">
                        {{#if primary-phone}}
                             <span class="icon-phone" title="{{primary-phone}}" user="{{user-id}}"></span>
                         {{/if}}
@@ -167,7 +169,7 @@
 </div>
 <div class="users-container well">
     <form class="form-search">
-        <input type="text" placeholder="search keyword..." class="input-medium search-query">
+        <input type="text" placeholder="<liferay-ui:message key="skype-search-placeholder"/>" class="input-medium search-query">
         <button type="submit" class="btn btn-primary">Search</button>
     </form>
     <div id="${pns}users-table"></div>

@@ -690,6 +690,7 @@ AUI.add('skype-portlet', function (Y, NAME) {
 
         searchListener: function() {
             var me = this;
+            var placeholder = Liferay.Language.get('skype-search-placeholder');
             var searchForm = this.get('container').one('.users-container .form-search');
             var input = searchForm.one('input[type="text"]');
             var searchTimeout = null;
@@ -705,23 +706,42 @@ AUI.add('skype-portlet', function (Y, NAME) {
                     execSearch();
                 }, 1000);
             });
+            searchForm.on('submit', function(e) {
+                e.halt();
+            });
             searchForm.one('button').on('click', function(e) {
                 e.preventDefault();
                 execSearch();
             });
+            /* placeholder in older browsers */
+            if (Y.UA.ie == 9) {
+                input.set('value', placeholder);
+                input.on('focus', function() {
+                    input.set('value', (placeholder == input.get('value') ? '' : input.get('value') ));
+                });
+                input.on('blur', function() {
+                    input.set('value', ('' == input.get('value') ? placeholder : input.get('value') ));
+                });
+            }
         },
         
         iconEditName: function () {
             var me = this;
             var editEvents = function(input) {
                 input.focus();
-                input.once('blur', function() {
+                var execSave = function() {
                     if (input.get('value') != '') {
                         me.iconSaveName();
                     } else {
                         editEvents(input);
                     }
+                }
+                input.once('blur', function() {
+                    execSave();
                 });
+                input.once('key', function() {
+                    execSave();
+                }, 'enter');
             };
             Y.one('#' + this.pns + 'group-name').on("click", function (e) {
                 var h3 = e.currentTarget,
