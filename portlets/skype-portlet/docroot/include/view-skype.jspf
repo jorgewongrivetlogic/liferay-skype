@@ -169,7 +169,7 @@
 </div>
 <div class="users-container well">
     <form class="form-search">
-        <input type="text" placeholder="search keyword..." class="input-medium search-query">
+        <input type="text" placeholder="<liferay-ui:message key="skype-search-placeholder"/>" class="input-medium search-query">
         <button type="submit" class="btn btn-primary">Search</button>
     </form>
     <div id="${pns}users-table"></div>
