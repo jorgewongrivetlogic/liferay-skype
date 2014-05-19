@@ -43,6 +43,9 @@
             div {
                 text-align: center;
             }
+            .handle {
+            	float: right;
+            }
         }
     }
 }
