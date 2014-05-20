@@ -27,6 +27,7 @@ import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
@@ -37,7 +38,9 @@ import com.rivetlogic.skype.beans.PreferencesBean;
 import com.rivetlogic.skype.model.SkypeGroup;
 import com.rivetlogic.skype.model.impl.SkypeGroupImpl;
 import com.rivetlogic.skype.service.SkypeGroupLocalServiceUtil;
+
 import static com.rivetlogic.skype.util.Constants.*;
+
 import com.rivetlogic.skype.util.SkypeUtil;
 
 import java.io.IOException;
@@ -78,6 +81,12 @@ public class SkypePortlet extends MVCPortlet {
 		prefBean.save(request);
 		SessionMessages.add(request, PortalUtil.getPortletId(request) +
 				SessionMessages.KEY_SUFFIX_UPDATED_PREFERENCES);
+		
+		String redirect = getRedirect(request, response);
+
+		if (Validator.isNotNull(redirect)) {
+			response.sendRedirect(redirect);
+		}
 	}
 	
 	@Override
@@ -120,8 +129,8 @@ public class SkypePortlet extends MVCPortlet {
 		cb.setStart(cb.getCurPage() * cb.getDelta() - cb.getDelta());
 		cb.setEnd(cb.getStart() + cb.getDelta());
 		
-		cb.setObc(SkypeUtil.getSkypeComparator(ParamUtil.getString(request, ORDER_BY_COL), 
-				ParamUtil.getBoolean(request, IS_ASC)));
+		cb.setObc(SkypeUtil.getSkypeComparator(ParamUtil.getString(request, ORDER_BY_COL, FIRST_NAME), 
+				ParamUtil.getBoolean(request, IS_ASC, true)));
 		cb.setSearch(ParamUtil.getString(request, SEARCH, null));
 		
 		cb.load();

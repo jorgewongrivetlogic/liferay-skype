@@ -97,7 +97,7 @@
                             <span class="icon-skype" title="{{skype-sn}}" user="{{user-id}}"></span>
                         {{/if}}
                     </td>
-                    <td class="center skype-btn-cell">
+                    <td class="center phone-btn-cell">
                        {{#if primary-phone}}
                             <span class="icon-phone" title="{{primary-phone}}" user="{{user-id}}"></span>
                         {{/if}}

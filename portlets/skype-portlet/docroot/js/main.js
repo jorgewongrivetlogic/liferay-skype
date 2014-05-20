@@ -23,9 +23,9 @@ AUI.add('skype-portlet', function (Y, NAME) {
         searchKeyword: '',
         currentPage: 1,
         total: 0,
-        nameAsc: false,
+        nameAsc: true,
         lastNameAsc: false,
-        isOrderedName: false,
+        isOrderedName: true,
         isOrderedLastName: false,
         itemsOnPaginator: 15,
         groupsPaginator: null,
@@ -64,7 +64,7 @@ AUI.add('skype-portlet', function (Y, NAME) {
         listUsersCall: function () {
             var me = this,
                 rawData = {
-                    cmd: 'list-users',
+                    skypecmd: 'list-users',
                     delta: me.get('usersPerPage'),
                     curPage: me.currentPage
                 };
@@ -116,7 +116,7 @@ AUI.add('skype-portlet', function (Y, NAME) {
             var me = this,
                 data = Liferay.Util.ns(
                 this.get('portletNamespace'), {
-                    cmd: 'list-users',
+                    skypecmd: 'list-users',
                     orderByCol: 'first-name',
                     delta: me.get('usersPerPage'),
                     curPage: me.currentPage,
@@ -145,7 +145,7 @@ AUI.add('skype-portlet', function (Y, NAME) {
             var me = this,
                 data = Liferay.Util.ns(
                 this.get('portletNamespace'), {
-                    cmd: 'list-users',
+                    skypecmd: 'list-users',
                     orderByCol: 'last-name',
                     delta: me.get('usersPerPage'),
                     curPage: me.currentPage,
@@ -171,7 +171,7 @@ AUI.add('skype-portlet', function (Y, NAME) {
             var me = this;
             this.getGroups(Liferay.Util.ns(
                 this.get('portletNamespace'), {
-                    cmd: 'list-groups',
+                    skypecmd: 'list-groups',
                     curPage: options.curPage,
                     delta: me.get('groupsPerPage')
             }));
@@ -181,7 +181,7 @@ AUI.add('skype-portlet', function (Y, NAME) {
             var me = this,
                 data = (options) ? options : Liferay.Util.ns(
                 this.get('portletNamespace'), {
-                    cmd: 'list-groups',
+                    skypecmd: 'list-groups',
                     delta: me.get('groupsPerPage')
                 });
             this.executeAjax({
@@ -205,7 +205,7 @@ AUI.add('skype-portlet', function (Y, NAME) {
             var me = this,
                 data = Liferay.Util.ns(
                 this.get('portletNamespace'), {
-                    cmd: 'add-group',
+                    skypecmd: 'add-group',
                     'skype-group-name': groupName,
                     'ids': Y.JSON.stringify(groupList)
                 });
@@ -222,7 +222,7 @@ AUI.add('skype-portlet', function (Y, NAME) {
             var me = this,
             data = Liferay.Util.ns(
             this.get('portletNamespace'), {
-                cmd: 'update-group-name',
+                skypecmd: 'update-group-name',
                 'skype-group-id': groupId,
                 'skype-group-name': groupName
             });
@@ -239,7 +239,7 @@ AUI.add('skype-portlet', function (Y, NAME) {
             var me = this,
                 data = Liferay.Util.ns(
                 this.get('portletNamespace'), {
-                    cmd: 'update-group',
+                    skypecmd: 'update-group',
                     'skype-group-id': groupId,
                     'skype-group-name': groupName,
                     'ids': Y.JSON.stringify(groupList)
@@ -257,7 +257,7 @@ AUI.add('skype-portlet', function (Y, NAME) {
             var me = this,
                 data = Liferay.Util.ns(
                 this.get('portletNamespace'), {
-                    cmd: 'remove-group',
+                    skypecmd: 'remove-group',
                     'skype-group-id': groupId
                 });
             this.executeAjax({
@@ -271,7 +271,7 @@ AUI.add('skype-portlet', function (Y, NAME) {
         getGroupInfo: function (skypeGroupId, callback) {
             var data = Liferay.Util.ns(
             this.get('portletNamespace'), {
-                cmd: 'get-group',
+                skypecmd: 'get-group',
                 'skype-group-id': skypeGroupId
             });
             this.executeAjax({
