@@ -55,7 +55,7 @@ public class Constants {
 	
 	
 	//CMD
-	public static final String CMD = "cmd";
+	public static final String CMD = "skypecmd";
 	public static final String CMD_ADD_GROUP = "add-group";
 	public static final String CMD_GET_GROUP = "get-group";
 	public static final String CMD_LIST_GROUPS = "list-groups";

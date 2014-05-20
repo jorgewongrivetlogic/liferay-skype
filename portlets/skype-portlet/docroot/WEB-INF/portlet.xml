@@ -7,11 +7,11 @@
 		<portlet-class>com.rivetlogic.skype.portlet.SkypePortlet</portlet-class>
 		<init-param>
 			<name>view-template</name>
-			<value>/view.jsp</value>
+			<value>/html/view.jsp</value>
 		</init-param>
 		<init-param>
             <name>edit-jsp</name>
-            <value>/edit.jsp</value>
+            <value>/html/edit.jsp</value>
         </init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>

@@ -182,5 +182,9 @@ h3.skype-group-name:hover {
 }
 
 .skype-portlet table .skype-btn-cell {
+    width: 50px;
+}
+
+.skype-portlet table .phone-btn-cell {
     width: 105px;
 }

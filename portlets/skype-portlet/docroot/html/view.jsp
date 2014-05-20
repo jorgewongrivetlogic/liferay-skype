@@ -14,17 +14,11 @@
  */
 --%>
 
-<%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
-<%@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
-<%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
-<%@ taglib uri="http://liferay.com/tld/aui" prefix="aui" %>
-<portlet:defineObjects />
-<%@ page import="com.liferay.portal.kernel.util.WebKeys" %>
+<%@include file="/html/init.jsp" %>
 
-<c:set var="pns" scope="request"><portlet:namespace /></c:set>
 <c:choose>
 	<c:when test="${isSignedIn}">
-		<%@include file="/include/view-skype.jspf" %>
+		<%@include file="/html/include/view-skype.jspf" %>
 	</c:when>
 	<c:otherwise>
 		<%renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);%>

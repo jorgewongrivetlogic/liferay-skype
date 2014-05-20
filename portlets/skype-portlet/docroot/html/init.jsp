@@ -17,21 +17,12 @@
 --%>
 
 <%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
-<%@ taglib uri="http://liferay.com/tld/aui" prefix="aui" %>
 <%@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
+<%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
+<%@ taglib uri="http://liferay.com/tld/aui" prefix="aui" %>
 
-<portlet:actionURL name="savePreferences" var="savePreferencesURL"/>
+<%@ page import="com.liferay.portal.kernel.util.WebKeys" %>
 
-<aui:form name="fm" action="${savePreferencesURL}">
-	<aui:input name="usersPerPage" label="label.users.per.page" value="${prefBean.usersPerPage}" >
-		<aui:validator name="digits"/>
-		<aui:validator name="required"/>
-	</aui:input>
-	<aui:input name="groupsPerPage" label="label.groups.per.page" value="${prefBean.groupsPerPage}">
-		<aui:validator name="digits"/>
-		<aui:validator name="required"/>
-	</aui:input>
-	<aui:button-row>
-		<aui:button type="submit" value="submit"/>
-	</aui:button-row>
-</aui:form>
+<portlet:defineObjects />
+
+<c:set var="pns" scope="request"><portlet:namespace /></c:set>
