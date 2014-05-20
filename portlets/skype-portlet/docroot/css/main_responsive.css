@@ -46,8 +46,6 @@
         }
         
         .pagination {
-            width: 100%;
-            text-align: center;
             li {
                 display: none;
                 a {

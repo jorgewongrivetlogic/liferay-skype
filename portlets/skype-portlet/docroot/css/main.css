@@ -158,6 +158,10 @@ div.skype-modal * {
             display: none;
         }
     }
+    .pagination {
+        width: 100%;
+        text-align: center;
+    }
 }
 
 #edit-options {
