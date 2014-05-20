@@ -289,6 +289,7 @@ AUI.add('skype-portlet', function (Y, NAME) {
          * 
          */
         renderPagination: function (total) {
+            var paginationVisibleItems = 5;
             var me = this;
             if (!this.usersPaginator) {
                 this.usersPaginator = new Y.Pagination({
@@ -306,7 +307,7 @@ AUI.add('skype-portlet', function (Y, NAME) {
                             paginationItems.each(function(node) {
                                 if (Y.Lang.isNumber(parseInt(node.get('text')))) {
                                     var itemNumber = parseInt(node.get('text'));
-                                    if (Math.abs(itemNumber - me.currentPage) > me.get('usersPerPage')) {
+                                    if (Math.abs(itemNumber - me.currentPage) > paginationVisibleItems) {
                                         node.addClass('hidden');
                                     } 
                                 };
