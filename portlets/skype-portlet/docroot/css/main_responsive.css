@@ -44,5 +44,20 @@
                 text-align: center;
             }
         }
+        
+        .pagination {
+            width: 100%;
+            text-align: center;
+            li {
+                display: none;
+                a {
+                    padding: 15px;
+                }
+            }
+            li.pagination-control,
+            li.active {
+                display: inline;
+            }
+        }
     }
 }
