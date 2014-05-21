@@ -293,27 +293,16 @@ AUI.add('skype-portlet', function (Y, NAME) {
             	MAX_PAGE_ITEMS = 5;
         	
             if (!this.usersPaginator) {
-                this.usersPaginator = new Y.Pagination({
+                this.usersPaginator = new Y.Rivet.Pagination({
                     boundingBox: Y.one('#' + this.pns + 'table-pagination'),
                     total: Math.floor((total + this.get('usersPerPage') - 1) / this.get('usersPerPage')),
                     page: 1,
+                    maxPagesNavItems: MAX_PAGE_ITEMS,
+                    showControls: true,
                     after: {
                         changeRequest: function(event) {
                             me.currentPage = event.state.page;
                             me.listUsersCall();
-                            
-                            var paginationItems = this.get('boundingBox').all('li a'),
-                            	range = me.calculateRange(me.currentPage, MAX_PAGE_ITEMS, this.get("total"));
-                            paginationItems.removeClass('hidden');
-                            paginationItems.each(function(node) {
-                                if (Y.Lang.isNumber(parseInt(node.get('text')))) {
-                                    var itemNumber = parseInt(node.get('text'));
-                                    if (itemNumber < range.start || itemNumber > range.end) {
-                                    	node.addClass('hidden');
-                                    }
-                                };
-                            });
-                            
                         }
                     }
                 }).render();
@@ -322,37 +311,6 @@ AUI.add('skype-portlet', function (Y, NAME) {
                 this.usersPaginator.set('page', me.currentPage);
             }
         },
-        
-		/**
-		 * Create a range to display on the pageLinks, keep the current page on
-		 * center.
-		 *
-		 * @method calculateRange
-		 * @param {Number} Current selected page
-		 * @param {Number} Max of the pages to show
-		 * @param {Number} Total pages
-		 * @return {Object} Object containing the start and end information.
-		 */
-		calculateRange: function(page, maxPageLinks, totalPages) {
-			var instance = this;
-
-			var offset = Math.ceil(maxPageLinks/2);
-
-			// this fixes when the offset is small and generates less than [maxPageLinks] page links
-			var start = Math.min(
-				// Math.max(x, 1) doesn't allow negative or zero values
-				Math.max(page - offset, 1), (totalPages - maxPageLinks + 1)
-			);
-
-			// (start + maxPageLinks - 1) try to find the end range
-			// Math.min with totalPages doesn't allow values bigger than totalPages
-			var end = Math.min(start + maxPageLinks - 1, totalPages);
-
-			return {
-				end: end,
-				start: start
-			};
-		},
 
         /**
          *
@@ -385,6 +343,7 @@ AUI.add('skype-portlet', function (Y, NAME) {
         },
 
         renderGroupTable: function (groups) {
+            var MAX_PAGE_ITEMS = 5
             var me = this;
             var source = Y.one('#' + this.pns + 'groups-template').getHTML(),
                 template = Y.Handlebars.compile(source),
@@ -394,10 +353,11 @@ AUI.add('skype-portlet', function (Y, NAME) {
             Y.one('#' + this.pns + 'groups-list .groups-wrapper').append(html);
             
             if (!this.groupsPaginator) {
-                this.groupsPaginator = new Y.Pagination({
+                this.groupsPaginator = new Y.Rivet.Pagination({
                     boundingBox: '#' + this.pns + 'groups-list .groups-pagination',
                     total: Math.floor((groups.total + this.get('groupsPerPage') - 1) / this.get('groupsPerPage')),
                     page: 1,
+                    maxPagesNavItems: MAX_PAGE_ITEMS,
                     after: {
                         changeRequest: function(event) {
                             me.getGroupsPaginated({curPage: event.state.page});
@@ -922,5 +882,5 @@ AUI.add('skype-portlet', function (Y, NAME) {
         }
     })
 }, '@VERSION@', {
-    "requires": ["yui-base", "base-build", "node", "event", 'node', 'event', 'aui-datatable', 'aui-pagination', 'aui-modal', 'aui-tooltip', 'handlebars', 'json-parse', 'io-base', 'aui-io-request']
+    "requires": ["yui-base", "base-build", "node", "event", 'node', 'event', 'aui-datatable', 'aui-pagination', 'aui-modal', 'aui-tooltip', 'handlebars', 'json-parse', 'io-base', 'aui-io-request', 'rivet-aui-pagination']
 });
