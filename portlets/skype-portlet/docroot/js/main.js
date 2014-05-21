@@ -289,8 +289,9 @@ AUI.add('skype-portlet', function (Y, NAME) {
          * 
          */
         renderPagination: function (total) {
-            var paginationVisibleItems = 5;
-            var me = this;
+        	var me = this,
+            	MAX_PAGE_ITEMS = 5;
+        	
             if (!this.usersPaginator) {
                 this.usersPaginator = new Y.Pagination({
                     boundingBox: Y.one('#' + this.pns + 'table-pagination'),
@@ -301,15 +302,15 @@ AUI.add('skype-portlet', function (Y, NAME) {
                             me.currentPage = event.state.page;
                             me.listUsersCall();
                             
-                            var paginationItemsDisplayed = 0;
-                            var paginationItems = this.get('boundingBox').all('li a');
+                            var paginationItems = this.get('boundingBox').all('li a'),
+                            	range = me.calculateRange(me.currentPage, MAX_PAGE_ITEMS, this.get("total"));
                             paginationItems.removeClass('hidden');
                             paginationItems.each(function(node) {
                                 if (Y.Lang.isNumber(parseInt(node.get('text')))) {
                                     var itemNumber = parseInt(node.get('text'));
-                                    if (Math.abs(itemNumber - me.currentPage) > paginationVisibleItems) {
-                                        node.addClass('hidden');
-                                    } 
+                                    if (itemNumber < range.start || itemNumber > range.end) {
+                                    	node.addClass('hidden');
+                                    }
                                 };
                             });
                             
@@ -321,6 +322,37 @@ AUI.add('skype-portlet', function (Y, NAME) {
                 this.usersPaginator.set('page', me.currentPage);
             }
         },
+        
+		/**
+		 * Create a range to display on the pageLinks, keep the current page on
+		 * center.
+		 *
+		 * @method calculateRange
+		 * @param {Number} Current selected page
+		 * @param {Number} Max of the pages to show
+		 * @param {Number} Total pages
+		 * @return {Object} Object containing the start and end information.
+		 */
+		calculateRange: function(page, maxPageLinks, totalPages) {
+			var instance = this;
+
+			var offset = Math.ceil(maxPageLinks/2);
+
+			// this fixes when the offset is small and generates less than [maxPageLinks] page links
+			var start = Math.min(
+				// Math.max(x, 1) doesn't allow negative or zero values
+				Math.max(page - offset, 1), (totalPages - maxPageLinks + 1)
+			);
+
+			// (start + maxPageLinks - 1) try to find the end range
+			// Math.min with totalPages doesn't allow values bigger than totalPages
+			var end = Math.min(start + maxPageLinks - 1, totalPages);
+
+			return {
+				end: end,
+				start: start
+			};
+		},
 
         /**
          *
@@ -460,7 +492,7 @@ AUI.add('skype-portlet', function (Y, NAME) {
          */
         setHandlerListener: function () {
             var instance = this;
-            Y.one(".skype-users-to-call").delegate('click', function () {
+            Y.one("#"+this.pns+"users").delegate('click', function () {
                 this.ancestor('li').remove();
                 var users = instance.getUsers();
                 if (users.length > 0) {
@@ -757,19 +789,6 @@ AUI.add('skype-portlet', function (Y, NAME) {
             });
         },
 
-        iconCancelName: function () {
-        	 var me = this;
-            Y.one("div.skype-users-to-call").delegate("click", function (e) {
-                var h3 = Y.one('#' + me.pns + 'group-name'),
-                    span = h3.one("span"),
-                    spanText = span.get("text"),
-                    edit = h3.next().setStyle("display", "none");
-                input = edit.one('input');
-                input.set("value", spanText);
-                h3.setStyle("display", "block");
-            }, ".edit-group .cancel-edit-group");
-        },
-
         iconSaveName: function () {
             var me = this;
             var h3 = Y.one('#' + me.pns + 'group-name'),
@@ -815,7 +834,7 @@ AUI.add('skype-portlet', function (Y, NAME) {
         */
         isInList: function (personId) {
             var users = "";
-            Y.all(".skype-users-to-call li").each(function (li) {
+            Y.all("#"+this.pns+" .skype-users-to-call li").each(function (li) {
                 users += li.getAttribute("skypeid") + ";";
             });
             return users.indexOf(personId) == -1;
@@ -872,7 +891,6 @@ AUI.add('skype-portlet', function (Y, NAME) {
             this.iconSaveEditGroupListener();
             this.iconDeleteGroup();
             this.iconEditName();
-            this.iconCancelName();
         }
     }, {
         ATTRS: {
