@@ -29,25 +29,38 @@ AUI.add('rivet-aui-pagination', function (Y, NAME) {
             var instance = this;
 
             this.on('changeRequest', function (event) {
-                var paginationItems = this.get('boundingBox').all('li a');
-                var range = instance.calculateRange(event.state.page, instance.get('maxPagesNavItems'), this.get("total"));
-                paginationItems.removeClass('hidden');
-                paginationItems.each(function (node) {
-                    if (Y.Lang.isNumber(parseInt(node.get('text')))) {
-                        var itemNumber = parseInt(node.get('text'));
-                        if (itemNumber < range.start || itemNumber > range.end) {
-                            node.addClass('hidden');
-                        }
-                    };
-                });
+                instance.displayPaginationLinks(event.state.page);
             });
 
             this.on('itemsChange', function () {
-                window.setTimeout(Y.bind(instance.renderButtons, this), 500);
+                window.setTimeout(function() {
+                    instance.renderButtons();
+                    instance.displayPaginationLinks(1);
+                }, 500);
             });
             this.bindButtons();
         },
-
+        
+        /**
+         * Display only the provided numbers of links 
+         *
+         * @method displayPaginationLinks
+         * @param {Number} currentPage Current page
+         */ 
+        displayPaginationLinks: function(currentPage) {
+            var paginationItems = this.get('boundingBox').all('li a');
+            var range = this.calculateRange(currentPage, this.get('maxPagesNavItems'), this.get("total"));
+            paginationItems.removeClass('hidden');
+            paginationItems.each(function (node) {
+                if (Y.Lang.isNumber(parseInt(node.get('text')))) {
+                    var itemNumber = parseInt(node.get('text'));
+                    if (itemNumber < range.start || itemNumber > range.end) {
+                        node.addClass('hidden');
+                    }
+                };
+            });
+        },
+        
         renderButtons: function () {
             this.get('boundingBox').all('ul').prepend(Y.Lang.sub(FIRST_NAV_LINK_TPL, {
                 text: this.get('firstNavLinkText')
