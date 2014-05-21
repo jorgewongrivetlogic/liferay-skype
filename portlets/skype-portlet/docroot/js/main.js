@@ -882,5 +882,5 @@ AUI.add('skype-portlet', function (Y, NAME) {
         }
     })
 }, '@VERSION@', {
-    "requires": ["yui-base", "base-build", "node", "event", 'node', 'event', 'aui-datatable', 'aui-pagination', 'aui-modal', 'aui-tooltip', 'handlebars', 'json-parse', 'io-base', 'aui-io-request', 'rivet-aui-pagination']
+    "requires": ["yui-base", "base-build", "node", "event", 'node', 'event', 'aui-datatable', 'aui-modal', 'aui-tooltip', 'handlebars', 'json-parse', 'io-base', 'aui-io-request', 'rivet-aui-pagination']
 });
