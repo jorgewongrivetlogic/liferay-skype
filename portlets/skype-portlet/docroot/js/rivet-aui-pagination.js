@@ -4,12 +4,12 @@ AUI.add('rivet-aui-pagination', function (Y, NAME) {
     /* module templates */
     var FIRST_NAV_LINK_TPL = '<li class="first-pagination-control"><a href="#">{text}</a>';
     var LAST_NAV_LINK_TPL = '<li class="last-pagination-control"><a href="#">{text}</a>';
-    
+
     Y.Rivet.Pagination = Y.Base.create('rivet-aui-pagination', Y.Pagination, [], {
 
         initializer: function () {
             var instance = this;
-            
+
             this.on('changeRequest', function (event) {
                 var paginationItems = this.get('boundingBox').all('li a');
                 var range = instance.calculateRange(event.state.page, instance.get('maxPagesNavItems'), this.get("total"));
@@ -23,65 +23,68 @@ AUI.add('rivet-aui-pagination', function (Y, NAME) {
                     };
                 });
             });
-            
-            this.on('itemsChange', function() {
+
+            this.on('itemsChange', function () {
                 window.setTimeout(Y.bind(instance.renderButtons, this), 500);
             });
             this.bindButtons();
         },
-        
-        renderButtons: function() {
-            this.get('boundingBox').all('ul').prepend(Y.Lang.sub(FIRST_NAV_LINK_TPL, {text: this.get('firstNavLinkText')}));
-            this.get('boundingBox').all('ul').append(Y.Lang.sub(LAST_NAV_LINK_TPL, {text: this.get('lastNavLinkText')}));
+
+        renderButtons: function () {
+            this.get('boundingBox').all('ul').prepend(Y.Lang.sub(FIRST_NAV_LINK_TPL, {
+                text: this.get('firstNavLinkText')
+            }));
+            this.get('boundingBox').all('ul').append(Y.Lang.sub(LAST_NAV_LINK_TPL, {
+                text: this.get('lastNavLinkText')
+            }));
         },
-        
-        bindButtons: function() {
+
+        bindButtons: function () {
             var instance = this;
-            this.get('boundingBox').delegate('click', function(e) {
+            this.get('boundingBox').delegate('click', function (e) {
                 e.halt(true);
                 instance._dispatchRequest({
                     page: 1
                 });
             }, '.first-pagination-control a');
-            
-            this.get('boundingBox').delegate('click', function(e) {
+
+            this.get('boundingBox').delegate('click', function (e) {
                 e.halt(true);
                 instance._dispatchRequest({
                     page: instance.get('total')
                 });
             }, '.last-pagination-control a');
         },
-        
+
         /**
-		 * Create a range to display on the pageLinks, keep the current page on
-		 * center.
-		 *
-		 * @method calculateRange
-		 * @param {Number} Current selected page
-		 * @param {Number} Max of the pages to show
-		 * @param {Number} Total pages
-		 * @return {Object} Object containing the start and end information.
-		 */
-		calculateRange: function(page, maxPageLinks, totalPages) {
-			var instance = this;
+         * Create a range to display on the pageLinks, keep the current page on
+         * center.
+         *
+         * @method calculateRange
+         * @param {Number} Current selected page
+         * @param {Number} Max of the pages to show
+         * @param {Number} Total pages
+         * @return {Object} Object containing the start and end information.
+         */
+        calculateRange: function (page, maxPageLinks, totalPages) {
+            var instance = this;
 
-			var offset = Math.ceil(maxPageLinks/2);
+            var offset = Math.ceil(maxPageLinks / 2);
 
-			// this fixes when the offset is small and generates less than [maxPageLinks] page links
-			var start = Math.min(
-				// Math.max(x, 1) doesn't allow negative or zero values
-				Math.max(page - offset, 1), (totalPages - maxPageLinks + 1)
-			);
+            // this fixes when the offset is small and generates less than [maxPageLinks] page links
+            var start = Math.min(
+            // Math.max(x, 1) doesn't allow negative or zero values
+            Math.max(page - offset, 1), (totalPages - maxPageLinks + 1));
 
-			// (start + maxPageLinks - 1) try to find the end range
-			// Math.min with totalPages doesn't allow values bigger than totalPages
-			var end = Math.min(start + maxPageLinks - 1, totalPages);
+            // (start + maxPageLinks - 1) try to find the end range
+            // Math.min with totalPages doesn't allow values bigger than totalPages
+            var end = Math.min(start + maxPageLinks - 1, totalPages);
 
-			return {
-				end: end,
-				start: start
-			};
-		}
+            return {
+                end: end,
+                start: start
+            };
+        }
 
     }, {
         ATTRS: {
@@ -94,11 +97,11 @@ AUI.add('rivet-aui-pagination', function (Y, NAME) {
             maxPagesNavItems: {
                 value: 10
             },
-            
+
             firstNavLinkText: {
                 value: 'First'
             },
-            
+
             lastNavLinkText: {
                 value: 'Last'
             }
