@@ -74,6 +74,10 @@
     color: #666;
 }
 
+.skype-portlet .btn-toolbar button i:hover {
+    background: none !important;
+}
+
 div.groups-list {
 	display: none;
 	border: solid 1px #CCC;
