@@ -297,6 +297,7 @@ AUI.add('skype-portlet', function (Y, NAME) {
                     boundingBox: Y.one('#' + this.pns + 'table-pagination'),
                     total: Math.floor((total + this.get('usersPerPage') - 1) / this.get('usersPerPage')),
                     page: 1,
+                    circular: false,
                     maxPagesNavItems: MAX_PAGE_ITEMS,
                     after: {
                         changeRequest: function(event) {
@@ -356,6 +357,7 @@ AUI.add('skype-portlet', function (Y, NAME) {
                     boundingBox: '#' + this.pns + 'groups-list .groups-pagination',
                     total: Math.floor((groups.total + this.get('groupsPerPage') - 1) / this.get('groupsPerPage')),
                     page: 1,
+                    circular: false,
                     maxPagesNavItems: MAX_PAGE_ITEMS,
                     after: {
                         changeRequest: function(event) {
