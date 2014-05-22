@@ -298,6 +298,8 @@ AUI.add('skype-portlet', function (Y, NAME) {
                     total: Math.floor((total + this.get('usersPerPage') - 1) / this.get('usersPerPage')),
                     page: 1,
                     maxPagesNavItems: MAX_PAGE_ITEMS,
+                    firstNavLinkText: Liferay.Language.get('skype.pagination.first.label'),
+                    lastNavLinkText: Liferay.Language.get('skype.pagination.last.label'),
                     after: {
                         changeRequest: function(event) {
                             me.currentPage = event.state.page;
@@ -357,6 +359,8 @@ AUI.add('skype-portlet', function (Y, NAME) {
                     total: Math.floor((groups.total + this.get('groupsPerPage') - 1) / this.get('groupsPerPage')),
                     page: 1,
                     maxPagesNavItems: MAX_PAGE_ITEMS,
+                    firstNavLinkText: Liferay.Language.get('skype.pagination.first.label'),
+                    lastNavLinkText: Liferay.Language.get('skype.pagination.last.label'),
                     after: {
                         changeRequest: function(event) {
                             me.getGroupsPaginated({curPage: event.state.page});
