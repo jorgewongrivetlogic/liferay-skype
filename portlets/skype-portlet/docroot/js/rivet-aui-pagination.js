@@ -63,10 +63,10 @@ AUI.add('rivet-aui-pagination', function (Y, NAME) {
         
         renderButtons: function () {
             this.get('boundingBox').all('ul').prepend(Y.Lang.sub(FIRST_NAV_LINK_TPL, {
-                text: this.get('firstNavLinkText')
+                text: this.get('strings').firstNavLinkText
             }));
             this.get('boundingBox').all('ul').append(Y.Lang.sub(LAST_NAV_LINK_TPL, {
-                text: this.get('lastNavLinkText')
+                text: this.get('strings').lastNavLinkText
             }));
         },
 
@@ -128,13 +128,14 @@ AUI.add('rivet-aui-pagination', function (Y, NAME) {
             maxPagesNavItems: {
                 value: 10
             },
-
-            firstNavLinkText: {
-                value: 'First'
-            },
-
-            lastNavLinkText: {
-                value: 'Last'
+            
+            strings: {
+                value: {
+                    firstNavLinkText: 'First',
+                    lastNavLinkText: 'Last',
+                    next: 'Next',
+                    prev: 'Prev'
+                }
             }
         }
     });
