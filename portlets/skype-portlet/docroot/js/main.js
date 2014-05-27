@@ -302,8 +302,8 @@ AUI.add('skype-portlet', function (Y, NAME) {
                     strings: {
                         firstNavLinkText: Liferay.Language.get('skype.pagination.first.label'),
                         lastNavLinkText: Liferay.Language.get('skype.pagination.last.label'),
-                        next: Liferay.Language.get('skype.pagination.prev.label'),
-                        prev: Liferay.Language.get('skype.pagination.next.label')
+                        prev: Liferay.Language.get('skype.pagination.prev.label'),
+                        next: Liferay.Language.get('skype.pagination.next.label')
                     },
                     after: {
                         changeRequest: function(event) {
@@ -368,8 +368,8 @@ AUI.add('skype-portlet', function (Y, NAME) {
                     strings: {
                         firstNavLinkText: Liferay.Language.get('skype.pagination.first.label'),
                         lastNavLinkText: Liferay.Language.get('skype.pagination.last.label'),
-                        next: Liferay.Language.get('skype.pagination.prev.label'),
-                        prev: Liferay.Language.get('skype.pagination.next.label')
+                        prev: Liferay.Language.get('skype.pagination.prev.label'),
+                        next: Liferay.Language.get('skype.pagination.next.label')
                     },
                     after: {
                         changeRequest: function(event) {
