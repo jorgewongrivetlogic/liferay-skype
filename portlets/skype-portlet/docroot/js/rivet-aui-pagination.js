@@ -62,6 +62,9 @@ AUI.add('rivet-aui-pagination', function (Y, NAME) {
         },
         
         renderButtons: function () {
+            if (this.get('boundingBox').one('.first-pagination-control') && this.get('boundingBox').one('.last-pagination-control')) {
+                return;
+            }
             this.get('boundingBox').all('ul').prepend(Y.Lang.sub(FIRST_NAV_LINK_TPL, {
                 text: this.get('strings').firstNavLinkText
             }));
