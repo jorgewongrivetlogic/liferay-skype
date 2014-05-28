@@ -663,7 +663,6 @@ AUI.add('skype-portlet', function (Y, NAME) {
                 // using bind to keep the function context to "me"
                 Y.bind(me.updateGroupRender, me));
 
-                Y.one('#' + me.pns + 'groups-list').setStyle("display", "none");
             }, ".icon-folder-open");
         },
 
