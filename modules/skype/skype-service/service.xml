@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.0.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_0_0.dtd">
+
+<service-builder package-path="com.rivetlogic.skype">
+	<author>Rivet Logic</author>
+	<namespace>rivetlogic_skype</namespace>
+
+	<entity name="SkypeGroup" local-service="true" remote-service="false">
+
+		<!-- PK fields -->
+		<column name="skypeGroupId" type="long" primary="true" />
+
+		<!-- Audit fields -->
+		<column name="userId" type="long" />
+		<column name="userName" type="String" />
+		<column name="createDate" type="Date" />
+		<column name="modifiedDate" type="Date" />
+
+		<column name="groupName" type="String" />
+		<!-- Contacts -->
+		<column name="skypeContacts" type="String" json-enabled="true"/>
+
+		<!-- Order -->
+		<order by="asc">
+			<order-column name="modifiedDate" />
+		</order>
+
+		<!-- Finder methods -->
+
+		<finder name="UserId" return-type="Collection">
+			<finder-column name="userId" />
+		</finder>
+		<finder name="UserIdAndGroupName" return-type="SkypeGroup" unique="true">
+			<finder-column name="userId" />
+			<finder-column name="groupName" />
+		</finder>
+	</entity>
+</service-builder>
+
+
