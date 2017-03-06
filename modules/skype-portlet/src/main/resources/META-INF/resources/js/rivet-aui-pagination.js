@@ -131,7 +131,7 @@ AUI.add('rivet-aui-pagination', function (Y, NAME) {
             maxPagesNavItems: {
                 value: 10
             },
-            
+
             strings: {
                 value: {
                     firstNavLinkText: 'First',

@@ -196,3 +196,28 @@ h3.skype-group-name:hover {
 .skype-portlet table .phone-btn-cell {
     width: 105px;
 }
+
+.saved-list .group-options {
+    display: block;
+}
+
+.saved-list ul {
+    list-style-type: none;
+}
+
+.group-options li {
+    display: inline-block;
+}
+
+.first-pagination-control, .pagination-control, .last-pagination-control {
+    white-space: nowrap;
+}
+
+li.first-pagination-control a, li.pagination-control a, li.last-pagination-control a {
+    width: 40px;
+}
+
+.groups-pagination {
+    width: 100%;
+    text-align: center;
+}

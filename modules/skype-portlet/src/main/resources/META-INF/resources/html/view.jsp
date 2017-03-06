@@ -42,8 +42,7 @@
 
             <script id="${pns}pagination-template" type="text/x-handlebars-template">
                 <ul id="${pns}users-table-pagination" class="pagination-content">
-                    <li class="pagination-control" id="${pns}pagination-first"><a href="#">&laquo;</a></li>
-                    <li class="pagination-control" id="${pns}pagination-previous"><a href="#">&lsaquo;</a></li>
+                    <li class="pagination-control" id="${pns}pagination-previous"><span class="icon-caret-left">&lsaquo;</span></li>
                     {{#items}}
                         {{#if isCurrent}}
                            <li class="pagination-number active"><a href="#">{{number}}</a></li>
@@ -51,8 +50,7 @@
                             <li class="pagination-number"><a href="#">{{number}}</a></li>
                         {{/if}}
                     {{/items}}
-                    <li class="pagination-control" id="${pns}pagination-next"><a href="#">&rsaquo;</a></li>
-                    <li class="pagination-control" id="${pns}pagination-last"><a href="#">&raquo;</a></li>
+                    <li class="pagination-control" id="${pns}pagination-next"><span class="icon-caret-right">&rsaquo;</span></li>
                 </ul>
             </script>
 
@@ -158,7 +156,7 @@
 				<div class="portlet-msg-error"><liferay-ui:message key="error.message.select.one.user"/></div>
 
 
-				<div id="${pns}groups-list" class="groups-list">
+				<div id="${pns}groups-list" class="groups-list saved-list">
 					<div class="groups-wrapper">
 					</div>
 					<div class="groups-pagination pagination pagination-small">
@@ -177,7 +175,7 @@
 					<button type="submit" class="btn btn-primary">Search</button>
 				</form>
 				<div id="${pns}users-table"></div>
-				<div id="${pns}table-pagination" class="pagination"></div>
+				<div id="${pns}table-pagination" class="pagination groups-pagination"></div>
 			</div>
         </div>
 	</c:when>
