@@ -1,0 +1,1 @@
+create unique index IX_843FAB9 on rivetlogic_skype_SkypeGroup (userId, groupName[$COLUMN_LENGTH:75$]);

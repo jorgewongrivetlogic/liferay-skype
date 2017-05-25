@@ -1,0 +1,7 @@
+Bundle-SymbolicName: skype-api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.rivetlogic.skype.exception,\
+	com.rivetlogic.skype.model,\
+	com.rivetlogic.skype.service,\
+	com.rivetlogic.skype.service.persistence

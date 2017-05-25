@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="com.rivetlogic.skype.model.SkypeGroup">
+		<field name="skypeGroupId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
+		<field name="groupName" type="String" />
+		<field name="skypeContacts" type="String" />
+	</model>
+</model-hints>
