@@ -55,7 +55,7 @@
             </script>
 
             <script id="${pns}table-template" type="text/x-handlebars-template">
-                <table class="aui table table-bordered table-hover table-striped skype-users">
+                <table class="table table-autofit table-list skype-users">
                     <thead>
                         <tr>
                             {{#if isOrderedName}}
@@ -145,11 +145,11 @@
 				</ul>
 				<div class="btn-toolbar">
 					<div class="btn-group">
-						<button id="${pns}skype-open" class="btn" title="<liferay-ui:message key="action.open.skype"/>"><i class="icon-comment"></i></button>
-						<button id="${pns}skype-call" class="btn group" title="<liferay-ui:message key="action.open.call"/>"><i class="icon-phone"></i></button>
-						<button id="${pns}skype-save" class="btn group disabled group-save-btn" title="<liferay-ui:message key="action.save.group"/>"><i class="icon-save"></i></button>
-						<button id="${pns}skype-load" class="btn group" title="<liferay-ui:message key="action.open.groups"/>"><i class="icon-align-justify"></i></button>
-						<button id="${pns}skype-new-group" class="btn group" title="<liferay-ui:message key="action.new.group"/>"><i class="icon-file"></i></button>
+						<button id="${pns}skype-open" class="btn btn-default" title="<liferay-ui:message key="action.open.skype"/>"><i class="icon-comment"></i></button>
+						<button id="${pns}skype-call" class="btn btn-default group" title="<liferay-ui:message key="action.open.call"/>"><i class="icon-phone"></i></button>
+						<button id="${pns}skype-save" class="btn btn-default group disabled group-save-btn" title="<liferay-ui:message key="action.save.group"/>"><i class="icon-save"></i></button>
+						<button id="${pns}skype-load" class="btn btn-default group" title="<liferay-ui:message key="action.open.groups"/>"><i class="icon-align-justify"></i></button>
+						<button id="${pns}skype-new-group" class="btn btn-default group" title="<liferay-ui:message key="action.new.group"/>"><i class="icon-file"></i></button>
 					</div>
 				</div>
 
@@ -170,9 +170,15 @@
 
 			</div>
 			<div class="users-container well">
-				<form class="form-search">
-					<input type="text" placeholder="<liferay-ui:message key="skype-search-placeholder"/>" class="input-medium search-query">
-					<button type="submit" class="btn btn-primary">Search</button>
+				<form class="skype-form-search">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="text" placeholder="<liferay-ui:message key="skype-search-placeholder"/>" class="form-control search-query">
+                            <div class="input-group-btn">
+                                <button type="submit" class="btn btn-primary">Search</button>
+                            </div>
+                        </div>
+                    </div>
 				</form>
 				<div id="${pns}users-table"></div>
 				<div id="${pns}table-pagination" class="pagination groups-pagination"></div>

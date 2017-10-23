@@ -49,6 +49,7 @@ import static com.rivetlogic.skype.util.Constants.IDS;
         "javax.portlet.resource-bundle=content.Language",
         "javax.portlet.security-role-ref=administrator,guest,power-user,user",
         "com.liferay.portlet.header-portlet-css=/css/main.css",
+        "com.liferay.portlet.header-portlet-css=/css/main_responsive.css",
         "com.liferay.portlet.footer-portlet-javascript=/js/main.js",
         "com.liferay.portlet.footer-portlet-javascript=/js/rivet-aui-pagination.js",
         "com.liferay.portlet.footer-portlet-javascript=/js/thirdparty/skype-uri.js"

@@ -1,7 +1,7 @@
 @import "mixins";
 
 @include respond-to(phone, tablet) {
-    .aui .skype-portlet {
+    .skype-portlet {
         div.groups-list {
             padding: 0.5em 10px;
             .group-label {
@@ -21,22 +21,22 @@
                 display: inline-block;
             }
         }
-        .form-search {
-            button {
-                display: inline-block;
-            }
-        }
+        // .form-search {
+        //     button {
+        //         display: inline-block;
+        //     }
+        // }
     }
 }
 @include respond-to(phone) {
-    .aui .skype-portlet {
-        .form-search {
-            input {
-                width: 90%;
-                padding: 5px 5%;
-                margin: 0;
-            }
-        }
+    .skype-portlet {
+        // .form-search {
+        //     input {
+        //         width: 90%;
+        //         padding: 5px 5%;
+        //         margin: 0;
+        //     }
+        // }
         .skype-users-to-call ul.users li {
             width: 90%;
             padding: 5px 5%;
@@ -61,6 +61,14 @@
             li.active {
                 display: inline;
             }
+        }
+    }
+}
+
+@include media-query(null, $screen-xs-max) {
+    .skype-portlet .btn-toolbar {
+        button {
+            padding: 8px 12px;
         }
     }
 }

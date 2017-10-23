@@ -696,7 +696,7 @@ AUI.add('skype-portlet', function (Y, NAME) {
         searchListener: function() {
             var me = this;
             var placeholder = Liferay.Language.get('skype-search-placeholder');
-            var searchForm = this.get('container').one('.users-container .form-search');
+            var searchForm = this.get('container').one('.users-container .skype-form-search');
             var input = searchForm.one('input[type="text"]');
             var searchTimeout = null;
             
