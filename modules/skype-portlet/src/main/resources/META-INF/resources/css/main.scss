@@ -151,14 +151,11 @@ div.skype-modal * {
 }
 
 .skype-portlet {
-    // .form-search {
-    //     // input[type="text"] {
-    //     //     max-width: 200px;
-    //     // }
-    //     // button {
-    //     //     display: none;
-    //     // }
-    // }
+    .skype-form-search {
+        .icon-search {
+            display: none;
+        }
+    }
     .pagination {
         width: 100%;
         text-align: center;

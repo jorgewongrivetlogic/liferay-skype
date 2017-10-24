@@ -175,7 +175,10 @@
                         <div class="input-group">
                             <input type="text" placeholder="<liferay-ui:message key="skype-search-placeholder"/>" class="form-control search-query">
                             <div class="input-group-btn">
-                                <button type="submit" class="btn btn-primary">Search</button>
+                                <button type="submit" class="btn btn-primary">
+                                    <span class="search-btn-label">Search</span>
+                                    <i class="icon-search"></i>
+                                </button>
                             </div>
                         </div>
                     </div>

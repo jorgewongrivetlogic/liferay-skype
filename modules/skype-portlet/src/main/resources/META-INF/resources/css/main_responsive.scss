@@ -30,13 +30,14 @@
 }
 @include respond-to(phone) {
     .skype-portlet {
-        // .form-search {
-        //     input {
-        //         width: 90%;
-        //         padding: 5px 5%;
-        //         margin: 0;
-        //     }
-        // }
+        .skype-form-search {
+            .search-btn-label {
+                display: none;
+            }
+            .icon-search {
+                display: inline-block;
+            }
+        }
         .skype-users-to-call ul.users li {
             width: 90%;
             padding: 5px 5%;
@@ -69,6 +70,33 @@
     .skype-portlet .btn-toolbar {
         button {
             padding: 8px 12px;
+        }
+    }
+}
+
+@include respond-to(phone) {
+    table.skype-users {
+        thead {
+            display: none;
+        }
+        tbody, tr, td {
+            display: block !important;
+            height: auto !important;
+            width: 100% !important;
+        }
+        td {
+            border: none !important;
+            box-shadow: none !important;
+            padding: 8px !important;
+        }
+        tr:nth-child(odd) {
+            td {
+                background: rgba(84, 84, 84, 0.04);
+            }
+        }
+        .skype-btn-cell,
+        .phone-btn-cell {
+            padding: 0;
         }
     }
 }
