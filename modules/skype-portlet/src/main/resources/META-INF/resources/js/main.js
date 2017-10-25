@@ -559,9 +559,9 @@ AUI.add('skype-portlet', function (Y, NAME) {
                 }
                 if (Skype.isIE10 || Skype.isIE9 || Skype.isIE8) {
                     Skype.trySkypeUri_IE9_IE8(uri, '', '');
-                } else if ((Skype.isIOS6 || Skype.isIOS5 || Skype.isIOS4) && Skype.isSafari) {
+                } else if ((Skype.isIPhone || Skype.IsPad || Skype.isIOS6 || Skype.isIOS5 || Skype.isIOS4) && Skype.isSafari) {
                     Skype.trySkypeUri_IOS_Safari(uri, skypeClientFrameId, '');
-                } else if (this.isAndroid && this.isFF) {
+                } else if (this.isAndroid) {
                     Skype.trySkypeUri_Android_Firefox(uri, skypeClientFrameId, '');
                 } else {
                     Skype.trySkypeUri_Generic(uri, skypeClientFrameId, '');
