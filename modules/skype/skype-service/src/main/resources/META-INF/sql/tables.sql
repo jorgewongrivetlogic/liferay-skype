@@ -5,5 +5,5 @@ create table rivetlogic_skype_SkypeGroup (
 	createDate DATE null,
 	modifiedDate DATE null,
 	groupName VARCHAR(75) null,
-	skypeContacts VARCHAR(75) null
+	skypeContacts TEXT null
 );

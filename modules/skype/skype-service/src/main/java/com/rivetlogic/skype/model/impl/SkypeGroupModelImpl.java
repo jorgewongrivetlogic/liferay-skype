@@ -87,7 +87,7 @@ public class SkypeGroupModelImpl extends BaseModelImpl<SkypeGroup>
 		TABLE_COLUMNS_MAP.put("skypeContacts", Types.VARCHAR);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table rivetlogic_skype_SkypeGroup (skypeGroupId LONG not null primary key,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,groupName VARCHAR(75) null,skypeContacts VARCHAR(75) null)";
+	public static final String TABLE_SQL_CREATE = "create table rivetlogic_skype_SkypeGroup (skypeGroupId LONG not null primary key,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,groupName VARCHAR(75) null,skypeContacts TEXT null)";
 	public static final String TABLE_SQL_DROP = "drop table rivetlogic_skype_SkypeGroup";
 	public static final String ORDER_BY_JPQL = " ORDER BY skypeGroup.modifiedDate ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY rivetlogic_skype_SkypeGroup.modifiedDate ASC";
