@@ -770,41 +770,45 @@ var Skype = new function () {
 		}
 
 		function e(s, v, t) {
-			var r = document.getElementById(v);
-			var u = true;
-			window.addEventListener("pagehide", function () {
-				u = false
-			}, false);
-			if (r !== null) {
-				r.src = s
-			}
-			setTimeout(function () {
-				if (u) {
-					alert(Skype.installSkypeMsg);
-					Skype.tryAnalyzeSkypeUri("redirect", t);
-					window.location = Skype.SkypeClientDownloadUrl
-				}
-			}, 2000)
+			document.location.href = s;
+			/// this is not longer supported on latest Safari versions
+			// var r = document.getElementById(v);
+			// alert(r);
+			// var u = true;
+			// window.addEventListener("pagehide", function () {
+			// 	u = false
+			// }, false);
+			// if (r !== null) {
+			// 	r.src = s
+			// }
+			// setTimeout(function () {
+			// 	if (u) {
+			// 		alert(Skype.installSkypeMsg);
+			// 		Skype.tryAnalyzeSkypeUri("redirect", t);
+			// 		window.location = Skype.SkypeClientDownloadUrl
+			// 	}
+			// }, 2000)
 		}
 
 		function q(s, v, u) {
-			var t = false;
-			var r = document.getElementById(v);
-			if (r !== null) {
-				try {
-					r.contentWindow.location.href = s;
-					t = true
-				} catch (w) {
-					t = false
-				}
-			}
-			setTimeout(function () {
-				if (!t) {
-					alert(Skype.installSkypeMsg);
-					Skype.tryAnalyzeSkypeUri("redirect", u);
-					window.location = Skype.SkypeClientDownloadUrl
-				}
-			}, 2000)
+			document.location.href = s;
+			// var t = false;
+			// var r = document.getElementById(v);
+			// if (r !== null) {
+			// 	try {
+			// 		r.contentWindow.location.href = s;
+			// 		t = true
+			// 	} catch (w) {
+			// 		t = false
+			// 	}
+			// }
+			// setTimeout(function () {
+			// 	if (!t) {
+			// 		alert(Skype.installSkypeMsg);
+			// 		Skype.tryAnalyzeSkypeUri("redirect", u);
+			// 		window.location = Skype.SkypeClientDownloadUrl
+			// 	}
+			// }, 2000)
 		}
 
 		function a(s, v, t) {

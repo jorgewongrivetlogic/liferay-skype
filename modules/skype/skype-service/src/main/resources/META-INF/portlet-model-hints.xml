@@ -8,6 +8,8 @@
 		<field name="createDate" type="Date" />
 		<field name="modifiedDate" type="Date" />
 		<field name="groupName" type="String" />
-		<field name="skypeContacts" type="String" />
+		<field name="skypeContacts" type="String">
+			<hint name="max-length">5000</hint>
+		</field>
 	</model>
 </model-hints>
