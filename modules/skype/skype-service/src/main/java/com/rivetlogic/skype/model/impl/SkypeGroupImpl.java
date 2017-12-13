@@ -60,6 +60,7 @@ public class SkypeGroupImpl extends SkypeGroupBaseImpl {
 	public static final String SKYPE_SCREEN_NAME = "skype-sn";
 	public static final String IS_SKYPE = "is-skype";
 	public static final String PRIMARY_PHONE = "primary-phone";
+	public static final String IS_ACTIVE = "is-active";
 
 	public SkypeGroupImpl() {
 	}
@@ -110,6 +111,7 @@ public class SkypeGroupImpl extends SkypeGroupBaseImpl {
 						}
 
 						value.put(IS_SKYPE, isSkype);
+						value.put(IS_ACTIVE, user.isActive());
 						array.put(value);
 					}
 				}

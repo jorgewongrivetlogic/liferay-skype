@@ -390,7 +390,10 @@ AUI.add('skype-portlet', function (Y, NAME) {
 
             for (var i = 0; i < length; i++) {
                 var item = data.ids[i];
-                if (item["is-skype"]) {
+                if (!item["is-active"]) {
+                    item.type = "non";
+                    item.skypeid = "";
+                } else if (item["is-skype"]) {
                     item.type = "skype";
                     item.skypeid = item["skype-sn"];
                 } else {
